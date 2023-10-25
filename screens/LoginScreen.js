@@ -1,12 +1,29 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import axios from "axios";
 
 const LoginScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        // Implémentez ici la logique de connexion
+    const handleLogin = async () => {
+        try {
+            const response = await axios.post('https://asalomon.v70208.campus-centre.fr/api/login', {
+                email,
+                password,
+            });
+
+            if (response.data && response.data.success) {
+                // La connexion a réussi, imprimez "Bien joué"
+                console.log('Bien joué');
+            } else {
+                // Gérez l'échec de la connexion, par exemple, affichez un message d'erreur.
+                console.error('Échec de la connexion');
+            }
+        } catch (error) {
+            // Gérez les erreurs réseau ou autres erreurs
+            console.error('Erreur lors de la connexion :', error);
+        }
     };
 
     return (
