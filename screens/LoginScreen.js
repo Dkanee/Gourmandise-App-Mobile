@@ -14,7 +14,7 @@ const LoginScreen = () => {
             });
 
             if (response.data && response.data.success) {
-                // La connexion a réussi, imprimez "Bien joué"
+                // La connexion a réussi,"
                 console.log('Bien joué');
             } else {
                 // Gérez l'échec de la connexion, par exemple, affichez un message d'erreur.
