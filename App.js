@@ -1,12 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import LoginScreen from "./screens/LoginScreen.js"; // Importez le composant LoginScreen
+import CreateAcc from "./screens/Createacc.js"; // Importez le composant LoginScreen
 
 export default function App() {
   return (
-      <View style={styles.container}>
-        <LoginScreen />
-      </View>
+    <View style={styles.container}>
+      <CreateAcc />
+    </View>
   );
 }
 
