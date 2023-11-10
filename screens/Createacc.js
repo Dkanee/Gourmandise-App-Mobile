@@ -76,7 +76,7 @@ export default function LoginScreen() {
   //     console.error("Erreur lors de la création du compte :", error);
   //   }
   // };
-  const handleCreateAcc = async () => {
+  const createAccount = async () => {
     try {
       const response = await fetch(
         "http://94.247.183.122/plesk-site-preview/asalomon.v70208.campus-centre.fr/https/94.247.183.122/api/register",
@@ -193,7 +193,7 @@ export default function LoginScreen() {
         {/*/>*/}
         <Button
           title="Créer un compte"
-          onPress={handleCreateAcc}
+          onPress={createAccount}
           buttonStyle={styles.loginButton}
         />
       </View>
