@@ -6,14 +6,23 @@ import navigation from "../component/navigation";
 import Home from "./Home";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-export default function Produits({ navigation }) {
+export default function Produits({navigation}) {
 
     const [data, setData] = useState([]);
 
     //Fonction pour récup les données de l'API
     const fetchData = async () => {
         try {
-            const newData = await fetch("http://94.247.183.122/plesk-site-preview/asalomon.v70208.campus-centre.fr/https/94.247.183.122/api/products");
+            const newData = await fetch(
+                "http://94.247.183.122/plesk-site-preview/asalomon.v70208.campus-centre.fr/https/94.247.183.122/api/products",
+                {
+                    method: "GET",
+                    headers: {
+                        accept: "application/json",
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
             const jsonData = await newData.json();
 
             //On stock les données dans le async storage
