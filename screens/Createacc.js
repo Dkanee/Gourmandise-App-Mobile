@@ -12,7 +12,7 @@ import { Button } from "react-native-elements";
 import { styles } from "../styles/AppStyles";
 
 const { width, height } = Dimensions.get("window"); // Obtenez les dimensions de l'écran
-export default function LoginScreen() {
+export default function Createacc() {
   const [nom, setNom] = useState("");
   const [adresse, setAdresse] = useState("");
   const [cp, setCp] = useState("");
@@ -21,61 +21,6 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [motdepasse, setPassword] = useState("");
 
-  // const handleCreateAcc = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       "http://94.247.183.122/plesk-site-preview/asalomon.v70208.campus-centre.fr/https/94.247.183.122/api/register",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           accept: "application/json",
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({
-  //           nom,
-  //           adresse,
-  //           cp,
-  //           ville,
-  //           telephone,
-  //           email,
-  //           motdepasse,
-  //         }),
-  //       }
-  //     );
-  //
-  //     if (response.status === 200 || response.status === 201) {
-  //       let responseData;
-  //
-  //       if (response.headers.get("content-type") === "application/json") {
-  //         responseData = await response.json();
-  //       } else {
-  //         responseData = await response.text();
-  //         console.log("Réponse texte brut :", responseData);
-  //       }
-  //
-  //       if (responseData && responseData.success) {
-  //         console.log("Création de compte bien effectuée");
-  //       } else {
-  //         console.error("Échec de la création de compte", responseData);
-  //       }
-  //     } else {
-  //       // Gérez les erreurs HTTP 4xx et 5xx spécifiquement
-  //       if (response.status >= 400 && response.status < 600) {
-  //         console.error(
-  //           "Échec de la création de compte. Erreur HTTP :",
-  //           response.status
-  //         );
-  //       } else {
-  //         // Gérez les autres erreurs HTTP ici
-  //         console.error("Réponse HTTP non OK :", response.status);
-  //       }
-  //       throw new Error("Échec de la création de compte");
-  //     }
-  //   } catch (error) {
-  //     // Gérez les erreurs non liées à HTTP ici
-  //     console.error("Erreur lors de la création du compte :", error);
-  //   }
-  // };
   const createAccount = async () => {
     try {
       const response = await fetch(
@@ -120,7 +65,7 @@ export default function LoginScreen() {
       <View style={styles.container}>
         <Image
           source={{ uri: "https://i.ibb.co/Q9Pjm80/logo.png" }}
-          style={styles.logo}
+          style={styles.logo1}
         />
 
         <Text style={[styles.label, { color: "white" }]}>Nom:</Text>
@@ -185,7 +130,7 @@ export default function LoginScreen() {
           secureTextEntry
           placeholderTextColor="white"
         />
-        <Text style={styles.forgotPassword}>Mot de passe oublié ?</Text>
+        <Text style={styles.forgotPassword}>Vous avez déjà un compte ?</Text>
         {/*<Button*/}
         {/*  title="Se connecter"*/}
         {/*  onPress={handleLogin}*/}
@@ -194,7 +139,7 @@ export default function LoginScreen() {
         <Button
           title="Créer un compte"
           onPress={createAccount}
-          buttonStyle={styles.loginButton}
+          buttonStyle={styles.createAcc}
         />
       </View>
     </ImageBackground>

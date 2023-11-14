@@ -16,6 +16,13 @@ export const styles = StyleSheet.create({
     height: 200,
     marginBottom: 20,
   },
+
+  logo1: {
+    width: 150,
+    height: 150,
+    marginTop: 100,
+    marginRight: 280,
+  },
   label: {
     fontSize: 16,
     marginBottom: 5,
@@ -25,12 +32,14 @@ export const styles = StyleSheet.create({
     height: 40,
     borderColor: "#ccc",
     borderWidth: 1,
+    borderRadius: 20, // Essayez une valeur plus grande
     marginBottom: 15,
     paddingHorizontal: 10,
     width: 300,
-    textDecorationColor: "#FFFFFF",
+    backgroundColor: "#8A6642",
     color: "#FFFFFF",
   },
+
   forgotPassword: {
     fontSize: 14,
     color: "#007AFF",
@@ -40,5 +49,9 @@ export const styles = StyleSheet.create({
   loginButton: {
     backgroundColor: "#7B3F00",
     marginBottom: 20,
+  },
+  createAcc: {
+    backgroundColor: "#7B3F00",
+    marginBottom: 120,
   },
 });
