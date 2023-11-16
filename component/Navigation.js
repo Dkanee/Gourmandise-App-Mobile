@@ -35,19 +35,17 @@ export default function navigation() {
             ),
           }}
         />
-        <Drawer.Screen
-          name="Produits"
-          component={Produits}
-          options={{
-            drawerIcon: (color) => (
-              <Ionicons
-                name="american-football-outline"
-                size={22}
-                color={color}
-              />
-            ),
-          }}
-        />
+        {/*<Drawer.Screen*/}
+        {/*  name="Produits"*/}
+        {/*  component={Produits}*/}
+        {/*  options={{*/}
+        {/*    drawerIcon: (color) => (*/}
+        {/*      <Ionicons*/}
+        {/*        name="american-football-outline"*/}
+        {/*        size={22}*/}
+        {/*        color={color}*/}
+        {/*      />*/}
+        ), }} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
