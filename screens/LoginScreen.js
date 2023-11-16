@@ -10,6 +10,7 @@ import {
 import { Button } from "react-native-elements";
 import { styles } from "../styles/AppStyles";
 
+
 const { width, height } = Dimensions.get("window"); // Obtenez les dimensions de l'écran
 
 export default function LoginScreen() {
