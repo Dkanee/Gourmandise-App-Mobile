@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import {red} from "react-native-reanimated/src";
+import { red } from "react-native-reanimated/src";
 export const styles = StyleSheet.create({
   containerNav: {
     flexDirection: "row",
@@ -12,8 +12,17 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
   },
   container: {
-    flex:1,
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+});
+
+const products = StyleSheet.create({
+  productItem: {
+    padding: 10,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    // Ajoutez vos propres styles ici
   },
 });
