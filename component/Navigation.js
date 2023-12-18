@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, useContext} from "react";
 import {NavigationContainer} from "@react-navigation/native";
 import Home from "../screens/Home";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
@@ -7,11 +7,17 @@ import {Header} from "react-native/Libraries/NewAppScreen";
 import CustomDrawer from "./CustomDrawer";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Navbar from "./Navbar";
-import {Text, View} from "react-native";
+import {Text, View, TouchableOpacity} from "react-native";
 import Login from "../screens/LoginScreen";
+import {AuthContext} from "../middleware/AuthContext";
+import Createacc from "../screens/Createacc";
 const Drawer = createDrawerNavigator();
 
 export default function navigation() {
+
+    const {isLoggedIn, setIsLoggedIn} = useContext(AuthContext);
+    console.log(isLoggedIn);
+
     return (
         <NavigationContainer>
             <Drawer.Navigator
@@ -39,17 +45,40 @@ export default function navigation() {
                     })
                     }
                 />
+                {!isLoggedIn ?
+                    <Drawer.Screen
+                        name="Login"
+                        component={Login}
+                        options={() => ({
+                            header: (props) => <Navbar {...props} title="Login"></Navbar>,
+                            drawerIcon: (color) => (
+                                <Ionicons name="home-outline" size={22} color={color}/>
+                            ),
+                        })
+                        }
+                    />
+                    :
+                    <Drawer.Screen
+                        name="Deconnexion"
+                        component={Login}
+                        options={() => ({
+                            header: (props) => <Navbar {...props} title="Logout"></Navbar>,
+                            drawerIcon: (color) => (
+                                <Ionicons name="home-outline" size={22} color={color}/>
+                            ),
+                        })
+                        }
+                    />
+                }
                 <Drawer.Screen
-                    name="Login"
-                    component={Login}
-                    options={() => ({
-                        header: (props) => <Navbar {...props} title="Login"></Navbar>,
-                        drawerIcon: (color) => (
-                            <Ionicons name="home-outline" size={22} color={color}/>
-                        ),
-                    })
-                    }
+                    name="Createacc"
+                    component={Createacc}
+                    options={{
+                        headerShown: false,
+                        drawerLabel: () => null,
+                    }}
                 />
+
                 {/*<Drawer.Screen*/}
                 {/*  name="Produits"*/}
                 {/*  component={Produits}*/}

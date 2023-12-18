@@ -1,11 +1,15 @@
 // Home.js
-import React from "react";
+import React, {useContext} from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput } from "react-native";
-import { styles } from "../styles/HomeStyles";
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput} from "react-native";
+import {styles} from "../styles/HomeStyles";
+import {AuthContext} from "../middleware/AuthContext";
 
 
-export default function Home({ navigation }) {
+export default function Home({navigation}) {
+
+    const {isLoggedIn, setIsLoggedIn, logout} = useContext(AuthContext);
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>Gourmandise</Text>
@@ -21,26 +25,66 @@ export default function Home({ navigation }) {
             <View style={styles.centeredRectangle}>
                 <TouchableOpacity style={styles.button}>
                     <View style={styles.buttonContent}>
-                        <Icon name="star" size={20} color="#fff" />
+                        <Icon name="star" size={20} color="#fff"/>
                         <Text style={styles.buttonText}>Nouveautés</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button}>
                     <View style={styles.buttonContent}>
-                        <Icon name="shopping-cart" size={20} color="#fff" />
+                        <Icon name="shopping-cart" size={20} color="#fff"/>
                         <Text style={styles.buttonText}>Produits</Text>
                     </View>
                 </TouchableOpacity>
-                <TextInput style={styles.searchInput} placeholder="Rechercher" />
+
+                {isLoggedIn
+                    ?
+                    <TouchableOpacity style={styles.button}>
+                        <View style={styles.buttonContent}>
+                            <Icon name="shopping-cart" size={20} color="#fff"/>
+                            <Text style={styles.buttonText}>Compte client</Text>
+                        </View>
+                    </TouchableOpacity>
+                    :
+                    <View></View>
+                }
+                {isLoggedIn
+                    ?
+                    <TouchableOpacity style={styles.button}>
+                        <View style={styles.buttonContent}>
+                            <Icon name="shopping-cart" size={20} color="#fff"/>
+                            <Text style={styles.buttonText}>Panier</Text>
+                        </View>
+                    </TouchableOpacity>
+                    :
+                    <View></View>
+                }
+
+                <TextInput style={styles.searchInput} placeholder="Rechercher"/>
             </View>
-            <TouchableOpacity style={styles.bottomButton} onPress={()=>{
-                navigation.navigate('LoginScreen');
-            }}>
-                <View style={styles.buttonContent}>
-                    <Icon name="sign-out" size={20} color="#fff" />
-                    <Text style={styles.buttonText}>Connexion</Text>
-                </View>
-            </TouchableOpacity>
+            {!isLoggedIn
+                ?
+
+                <TouchableOpacity style={styles.bottomButton} onPress={() => {
+                    navigation.navigate("Login");
+                }}>
+                    <View style={styles.buttonContent}>
+                        <Icon name="sign-out" size={20} color="#fff"/>
+                        <Text style={styles.buttonText}>Connexion</Text>
+                    </View>
+                </TouchableOpacity>
+
+                :
+
+                <TouchableOpacity style={styles.bottomButton} onPress={() => {
+                    logout();
+                }}>
+                    <View style={styles.buttonContent}>
+                        <Icon name="sign-out" size={20} color="#fff"/>
+                        <Text style={styles.buttonText}>Déconnexion</Text>
+                    </View>
+                </TouchableOpacity>
+            }
+
         </ScrollView>
     );
 }
