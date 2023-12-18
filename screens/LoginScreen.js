@@ -39,18 +39,14 @@ export default function LoginScreen() {
         const data = await response.json();
 
         if (data && data.success) {
-          // La connexion a réussi
           console.log("Bien joué");
         } else {
-          // Gérez l'échec de la connexion, par exemple, affichez un message d'erreur.
           console.error("Échec de la connexion");
         }
       } else {
-        // Gérez les erreurs HTTP (par exemple, 401 Unauthorized, 500 Internal Server Error, etc.).
         console.error("Erreur HTTP lors de la connexion:", response.status);
       }
     } catch (error) {
-      // Gérez les autres erreurs
       console.error("Erreur lors de la connexion :", error);
     }
   };
@@ -63,12 +59,6 @@ export default function LoginScreen() {
   };
 
   return (
-    <ImageBackground
-      source={{
-        uri: "https://i.ibb.co/ryk7s3y/dkane-image-confiseries-de-luxe-a-base-de-chocolat-de-haute-qu-5bf4147b-d576-41d4-a829-cbdcd9b9ede7.png",
-      }}
-      style={styles.backgroundImage}
-    >
       <View style={styles.container}>
         <Image
           source={{ uri: "https://i.ibb.co/Q9Pjm80/logo.png" }}
@@ -105,6 +95,5 @@ export default function LoginScreen() {
           buttonStyle={styles.loginButton}
         />
       </View>
-    </ImageBackground>
   );
 }

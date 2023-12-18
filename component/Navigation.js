@@ -8,13 +8,14 @@ import CustomDrawer from "./CustomDrawer";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Navbar from "./Navbar";
 import {Text, View} from "react-native";
+import Login from "../screens/LoginScreen";
 const Drawer = createDrawerNavigator();
 
 export default function navigation() {
     return (
         <NavigationContainer>
             <Drawer.Navigator
-                initialRouteName={"Home"}
+                initialRouteName={"Accueil"}
                 drawerContent={(props) => <CustomDrawer {...props} />}
                 screenOptions={{
                     headerShown: true,
@@ -28,10 +29,21 @@ export default function navigation() {
                 }}
             >
                 <Drawer.Screen
-                    name="Home"
+                    name="Accueil"
                     component={Home}
                     options={() => ({
-                        header: (props) => <Navbar {...props} title="Home"></Navbar>,
+                        header: (props) => <Navbar {...props} title="Accueil"></Navbar>,
+                        drawerIcon: (color) => (
+                            <Ionicons name="home-outline" size={22} color={color}/>
+                        ),
+                    })
+                    }
+                />
+                <Drawer.Screen
+                    name="Login"
+                    component={Login}
+                    options={() => ({
+                        header: (props) => <Navbar {...props} title="Login"></Navbar>,
                         drawerIcon: (color) => (
                             <Ionicons name="home-outline" size={22} color={color}/>
                         ),
