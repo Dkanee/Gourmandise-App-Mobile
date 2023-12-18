@@ -56,12 +56,7 @@ export default function Createacc() {
   };
 
   return (
-    <ImageBackground
-      source={{
-        uri: "https://i.ibb.co/ryk7s3y/dkane-image-confiseries-de-luxe-a-base-de-chocolat-de-haute-qu-5bf4147b-d576-41d4-a829-cbdcd9b9ede7.png",
-      }}
-      style={styles.backgroundImage}
-    >
+
       <View style={styles.container}>
         <Image
           source={{ uri: "https://i.ibb.co/Q9Pjm80/logo.png" }}
@@ -131,17 +126,11 @@ export default function Createacc() {
           placeholderTextColor="white"
         />
         <Text style={styles.forgotPassword}>Vous avez déjà un compte ?</Text>
-        {/*<Button*/}
-        {/*  title="Se connecter"*/}
-        {/*  onPress={handleLogin}*/}
-        {/*  buttonStyle={styles.loginButton}*/}
-        {/*/>*/}
         <Button
           title="Créer un compte"
           onPress={createAccount}
           buttonStyle={styles.createAcc}
         />
       </View>
-    </ImageBackground>
   );
 }

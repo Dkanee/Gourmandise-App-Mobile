@@ -54,4 +54,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "#7B3F00",
     marginBottom: 120,
   },
+  btn:{
+    margin: -100,
+  },
 });

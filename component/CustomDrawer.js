@@ -50,23 +50,23 @@ const CustomDrawer = (props) => {
                     <DrawerItemList {...props} />
                 </View>
             </DrawerContentScrollView>
-            <View style={{padding: 10, borderTopWidth: 1, borderTopColor: "#ccc"}}>
-                <TouchableOpacity onPress={() => {
-                }} style={{paddingVertical: 7}}>
-                    <View style={{flexDirection: "row"}}>
-                        <Text
-                            style={{
-                                fontSize: 15,
-                                marginLeft: 10,
-                                marginRight: 10,
-                            }}
-                        >
-                            Déconnexion
-                        </Text>
-                        <Ionicons name="log-out-outline" size={22}/>
-                    </View>
-                </TouchableOpacity>
-            </View>
+            {/*<View style={{padding: 10, borderTopWidth: 1, borderTopColor: "#ccc"}}>*/}
+            {/*    <TouchableOpacity onPress={() => {*/}
+            {/*    }} style={{paddingVertical: 7}}>*/}
+            {/*        <View style={{flexDirection: "row"}}>*/}
+            {/*            <Text*/}
+            {/*                style={{*/}
+            {/*                    fontSize: 15,*/}
+            {/*                    marginLeft: 10,*/}
+            {/*                    marginRight: 10,*/}
+            {/*                }}*/}
+            {/*            >*/}
+            {/*                Déconnexion*/}
+            {/*            </Text>*/}
+            {/*            <Ionicons name="log-out-outline" size={22}/>*/}
+            {/*        </View>*/}
+            {/*    </TouchableOpacity>*/}
+            {/*</View>*/}
         </View>
     );
 };
