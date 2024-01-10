@@ -1,83 +1,3 @@
-// import React, { Component, useEffect, useState } from "react";
-// import {
-//   Button,
-//   FlatList,
-//   Image,
-//   Text,
-//   TouchableOpacity,
-//   View,
-// } from "react-native";
-// // import AsyncStorage from "@react-native-async-storage/async-storage";
-// import { GlobalStyles } from "../styles/AppStyles";
-// import navigation from "../component/navigation";
-// import Home from "./Home";
-// import Ionicons from "react-native-vector-icons/Ionicons";
-//
-// export default function Produits({ navigation }) {
-//   const [data, setData] = useState([]);
-//
-//   //Fonction pour récup les données de l'API
-//   const fetchData = async () => {
-//     try {
-//       const newData = await fetch(
-//         "http://94.247.183.122/plesk-site-preview/asalomon.v70208.campus-centre.fr/https/94.247.183.122/api/products",
-//         {
-//           method: "GET",
-//           headers: {
-//             accept: "application/json",
-//             "Content-Type": "application/json",
-//           },
-//         }
-//       );
-//       const jsonData = await newData.json();
-//
-//       //On stock les données dans le async storage
-//       await AsyncStorage.setItem("data", JSON.stringify(jsonData));
-//
-//       //Metre a jour l'état de data avec les nouvelles données
-//       setData(jsonData);
-//       console.log(data);
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
-//
-//   const fetchDataLocal = async () => {
-//     try {
-//       const storedData = await AsyncStorage.getItem("data");
-//       if (storedData != null) {
-//         setData(JSON.parse(storedData));
-//       }
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
-//
-//   const displayProducts = () => {
-//     return data.results.map((produit, index) => (
-//       <View key={index}>{produit.designation}</View>
-//     ));
-//   };
-//
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-//
-//   return (
-//     <View>
-//       <View style={GlobalStyles.containerNav}>
-//         <TouchableOpacity onPress={() => navigation.openDrawer()}>
-//           <Ionicons name="menu-outline" size={22} />
-//         </TouchableOpacity>
-//         <Text style={GlobalStyles.titleNav}>Produits</Text>
-//       </View>
-//       <View>
-//         <FlatList data={data.results} renderItem={displayProducts} />
-//       </View>
-//     </View>
-//   );
-// }
-
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -85,10 +5,12 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  Image,
 } from "react-native";
+
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { SafeAreaView } from "react-native-safe-area-context";
+// import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Produits({ navigation }) {
   const [data, setData] = useState([]);
@@ -97,7 +19,7 @@ export default function Produits({ navigation }) {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        "http://94.247.183.122/plesk-site-preview/asalomon.v70208.campus-centre.fr/https/94.247.183.122/api/products",
+        "https://asalomon.v70208.campus-centre.fr/api/products",
         {
           method: "GET",
           headers: {
@@ -106,23 +28,31 @@ export default function Produits({ navigation }) {
           },
         }
       );
+      console.log();
+
       const jsonData = await response.json();
       await AsyncStorage.setItem("data", JSON.stringify(jsonData));
-      setData(jsonData); // Assurez-vous que cela correspond à la structure de vos données
+      setData(jsonData);
     } catch (err) {
       console.error(err);
     }
   };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   // Composant pour afficher chaque produit
   const renderItem = ({ item }) => (
-    <View style={styles.productItem}>
-      <Text>{item.designation}</Text>
-      {/* Ajoutez d'autres détails du produit ici */}
+    <View style={styles.card}>
+      <Image
+        source={require("../assets/product.png")}
+        style={styles.productImage}
+      />
+      <View style={styles.cardContent}>
+        <Text style={styles.productName}>{item.designation}</Text>
+        <Text style={styles.productPrice}>{item.prix_unitaire_HT} €</Text>
+      </View>
     </View>
   );
 
@@ -137,7 +67,7 @@ export default function Produits({ navigation }) {
       <FlatList
         data={data}
         renderItem={renderItem}
-        keyExtractor={(item) => item.reference.toString()} // Clé basée sur la référence
+        keyExtractor={(item) => item.reference.toString()} // clé basée sur la référence
       />
     </View>
   );
@@ -145,25 +75,39 @@ export default function Produits({ navigation }) {
 
 // Styles pour le composant Produits
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  containerNav: {
+  card: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingTop: 40,
-    backgroundColor: "#f0f0f0",
+    padding: 16,
+    marginVertical: 12,
+    marginHorizontal: 20,
+    backgroundColor: "#fff",
+    borderRadius: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 8,
   },
-  titleNav: {
+  productImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  cardContent: {
+    flex: 1,
+    justifyContent: "center",
+    paddingLeft: 20,
+  },
+  productName: {
     fontSize: 18,
-    marginLeft: 10,
+    fontWeight: "bold",
+    marginBottom: 5,
   },
-  productItem: {
-    padding: 10,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    backgroundColor: "#e0e0e0",
+  productPrice: {
+    fontSize: 16,
+    color: "grey",
   },
 });
