@@ -51,7 +51,9 @@ export default function Produits({ navigation }) {
       />
       <View style={styles.cardContent}>
         <Text style={styles.productName}>{item.designation}</Text>
-        <Text style={styles.productPrice}>{item.prix_unitaire_HT} €</Text>
+        <Text style={styles.productPrice}>
+          {item.prix_unitaire_HT * 0.2 + item.prix_unitaire_HT} €
+        </Text>
       </View>
     </View>
   );
@@ -60,7 +62,7 @@ export default function Produits({ navigation }) {
     <View style={styles.container}>
       <View style={styles.containerNav}>
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
-          <Ionicons name="menu-outline" size={22} />
+          <Ionicons name="menu-outline" style={styles.menuIcon} />
         </TouchableOpacity>
         <Text style={styles.titleNav}>Produits</Text>
       </View>
@@ -73,8 +75,24 @@ export default function Produits({ navigation }) {
   );
 }
 
-// Styles pour le composant Produits
 const styles = StyleSheet.create({
+  containerNav: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center", // Centre verticalement les éléments
+    paddingHorizontal: 16,
+    paddingTop: 50,
+    paddingBottom: 10, // Ajout d'un padding en bas pour un meilleur espacement
+    backgroundColor: "#582900",
+  },
+  titleNav: {
+    fontSize: 22, // Taille de police augmentée pour le titre
+    fontWeight: "bold", // Rendre le titre plus épais
+    flex: 1,
+    textAlign: "center", // Centrer le titre
+    marginLeft: -40, // Ajustez cette valeur en fonction de la taille de votre icône de menu
+    color: "#FFFFFF",
+  },
   card: {
     flexDirection: "row",
     padding: 16,
@@ -99,7 +117,7 @@ const styles = StyleSheet.create({
   cardContent: {
     flex: 1,
     justifyContent: "center",
-    paddingLeft: 20,
+    paddingLeft: 0,
   },
   productName: {
     fontSize: 18,
@@ -109,5 +127,9 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 16,
     color: "grey",
+  },
+  menuIcon: {
+    fontSize: 28,
+    color: "#FFFFFF",
   },
 });
