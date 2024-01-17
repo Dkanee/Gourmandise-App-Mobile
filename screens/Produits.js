@@ -31,8 +31,12 @@ export default function Produits({ navigation }) {
       console.log();
 
       const jsonData = await response.json();
-      await AsyncStorage.setItem("data", JSON.stringify(jsonData));
-      setData(jsonData);
+      const productsWithQuantity = jsonData.map((item) => ({
+        ...item,
+        quantity: 1,
+      })); // Add a quantity property
+      await AsyncStorage.setItem("data", JSON.stringify(productsWithQuantity));
+      setData(productsWithQuantity);
     } catch (err) {
       console.error(err);
     }
@@ -41,18 +45,41 @@ export default function Produits({ navigation }) {
   useEffect(() => {
     fetchData();
   }, []);
-
-  // Composant pour afficher chaque produit
+  const handleQuantityChange = (item, delta) => {
+    setData((currentData) =>
+      currentData.map((prod) => {
+        if (prod.reference === item.reference) {
+          const newQuantity = Math.max(1, prod.quantity + delta);
+          return { ...prod, quantity: newQuantity };
+        }
+        return prod;
+      })
+    );
+  };
   const renderItem = ({ item }) => (
     <View style={styles.card}>
       <Image
         source={require("../assets/product.png")}
+        //source={item.url} Gérer ici l'affichage des images avec le champ souhaité
         style={styles.productImage}
       />
       <View style={styles.cardContent}>
         <Text style={styles.productName}>{item.designation}</Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <TouchableOpacity onPress={() => handleQuantityChange(item, -1)}>
+            <Ionicons name="remove-circle-outline" size={24} color="black" />
+          </TouchableOpacity>
+          <Text>{item.quantity}</Text>
+          <TouchableOpacity onPress={() => handleQuantityChange(item, 1)}>
+            <Ionicons name="add-circle-outline" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
         <Text style={styles.productPrice}>
-          {item.prix_unitaire_HT * 0.2 + item.prix_unitaire_HT} €
+          {(
+            (item.prix_unitaire_HT * 0.2 + item.prix_unitaire_HT) *
+            item.quantity
+          ).toFixed(2)}
+          €
         </Text>
       </View>
     </View>
@@ -90,9 +117,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold", // Rendre le titre plus épais
     flex: 1,
     textAlign: "center", // Centrer le titre
-    marginLeft: -40, // Ajustez cette valeur en fonction de la taille de votre icône de menu
+    marginLeft: -40, // Ajuster cette valeur en fonction de la taille de votre icône de menu
     color: "#FFFFFF",
   },
+  //Style pour le format de la Card dans Produits
   card: {
     flexDirection: "row",
     padding: 16,
