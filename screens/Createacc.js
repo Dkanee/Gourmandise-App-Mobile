@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+    SafeAreaView,
   View,
   Text,
   TextInput,
@@ -7,12 +8,13 @@ import {
   ImageBackground,
   Dimensions,
 } from "react-native";
-import handleLogin from "./LoginScreen";
+import LoginScreen from "./LoginScreen";
+import Navigation from "../component/Navigation"
 import { Button } from "react-native-elements";
 import { styles } from "../styles/AppStyles";
 
 const { width, height } = Dimensions.get("window"); // Obtenez les dimensions de l'écran
-export default function Createacc() {
+export default function Createacc({ navigation }) {
   const [nom, setNom] = useState("");
   const [adresse, setAdresse] = useState("");
   const [cp, setCp] = useState("");
@@ -24,7 +26,7 @@ export default function Createacc() {
   const createAccount = async () => {
     try {
       const response = await fetch(
-        "http://94.247.183.122/plesk-site-preview/asalomon.v70208.campus-centre.fr/https/94.247.183.122/api/register",
+        "https://gourmandise.mgueye-ba.v70208.campus-centre.fr/api/register",
         {
           method: "POST",
           headers: {
@@ -57,13 +59,13 @@ export default function Createacc() {
 
   return (
 
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Image
           source={{ uri: "https://i.ibb.co/Q9Pjm80/logo.png" }}
           style={styles.logo1}
         />
 
-        <Text style={[styles.label, { color: "white" }]}>Nom:</Text>
+        <Text style={[styles.label, { color: "black" }]}>Nom:</Text>
         <TextInput
           style={styles.input}
           value={nom}
@@ -72,7 +74,7 @@ export default function Createacc() {
           placeholderTextColor="white"
         />
 
-        <Text style={[styles.label, { color: "white" }]}>Adresse:</Text>
+        <Text style={[styles.label, { color: "black" }]}>Adresse:</Text>
         <TextInput
           style={styles.input}
           value={adresse}
@@ -81,7 +83,7 @@ export default function Createacc() {
           placeholderTextColor="white"
         />
 
-        <Text style={[styles.label, { color: "white" }]}>Code Postal:</Text>
+        <Text style={[styles.label, { color: "black" }]}>Code Postal:</Text>
         <TextInput
           style={styles.input}
           value={cp}
@@ -90,7 +92,7 @@ export default function Createacc() {
           placeholderTextColor="white"
         />
 
-        <Text style={[styles.label, { color: "white" }]}>Ville:</Text>
+        <Text style={[styles.label, { color: "black" }]}>Ville:</Text>
         <TextInput
           style={styles.input}
           value={ville}
@@ -99,7 +101,7 @@ export default function Createacc() {
           placeholderTextColor="white"
         />
 
-        <Text style={[styles.label, { color: "white" }]}>Téléphone:</Text>
+        <Text style={[styles.label, { color: "black" }]}>Téléphone:</Text>
         <TextInput
           style={styles.input}
           value={telephone}
@@ -108,7 +110,7 @@ export default function Createacc() {
           placeholderTextColor="white"
         />
 
-        <Text style={[styles.label, { color: "white" }]}>Email:</Text>
+        <Text style={[styles.label, { color: "black" }]}>Email:</Text>
         <TextInput
           style={styles.input}
           value={email}
@@ -116,7 +118,7 @@ export default function Createacc() {
           placeholder="Entrez votre email"
           placeholderTextColor="white"
         />
-        <Text style={[styles.label, { color: "white" }]}>Mot de passe:</Text>
+        <Text style={[styles.label, { color: "black" }]}>Mot de passe:</Text>
         <TextInput
           style={styles.input}
           value={motdepasse}
@@ -126,11 +128,11 @@ export default function Createacc() {
           placeholderTextColor="white"
         />
         <Text style={styles.forgotPassword}>Vous avez déjà un compte ?</Text>
-        <Button
-          title="Créer un compte"
-          onPress={createAccount}
-          buttonStyle={styles.createAcc}
-        />
-      </View>
+          <Button
+              title="Se connecter"
+              onPress={() => navigation.navigate('Login')}
+              buttonStyle={styles.loginButton}
+          />
+      </SafeAreaView>
   );
 }

@@ -12,16 +12,17 @@ export const styles = StyleSheet.create({
     padding: 21,
   },
   logo: {
-    width: 200,
-    height: 200,
-    marginBottom: 20,
+    width: 130,
+    height: 130,
+    marginBottom: 2,
+
   },
 
   logo1: {
-    width: 150,
-    height: 150,
-    marginTop: 100,
-    marginRight: 280,
+    width: 120,
+    height: 110,
+    marginBottom: 2,
+    marginTop:45,
   },
   label: {
     fontSize: 16,

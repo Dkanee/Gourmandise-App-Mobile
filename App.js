@@ -12,7 +12,7 @@ export default function App() {
   return (
     <AuthProvider>
       <View style={{ flex: 1 }}>
-        <Produits />
+        <Navigation />
       </View>
     </AuthProvider>
   );

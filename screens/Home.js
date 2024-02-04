@@ -29,7 +29,9 @@ export default function Home({navigation}) {
                         <Text style={styles.buttonText}>Nouveautés</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={() => {
+                    navigation.navigate("Produits");
+                }}>
                     <View style={styles.buttonContent}>
                         <Icon name="shopping-cart" size={20} color="#fff"/>
                         <Text style={styles.buttonText}>Produits</Text>

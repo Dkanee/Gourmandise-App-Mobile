@@ -5,11 +5,14 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingTop: 40,
+    backgroundColor: '#582900',
+    paddingTop: 55,
+    height : 90,
   },
   titleNav: {
     fontSize: 18,
     marginLeft: 10,
+    color:'white',
   },
   container: {
     flex: 1,

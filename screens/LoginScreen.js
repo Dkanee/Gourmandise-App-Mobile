@@ -15,7 +15,7 @@ import Toast from "react-native-toast-message";
 
 const { width, height } = Dimensions.get("window"); // Obtenez les dimensions de l'écran
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ title ,navigation }) {
   const [email, setEmail] = useState("");
   const [motdepasse, setPassword] = useState("");
   const { login } = useContext(AuthContext);
@@ -23,7 +23,7 @@ export default function LoginScreen({ navigation }) {
   const handleLogin = async () => {
     try {
       const response = await fetch(
-        "http://94.247.183.122/plesk-site-preview/asalomon.v70208.campus-centre.fr/https/94.247.183.122/api/login",
+        "https://gourmandise.mgueye-ba.v70208.campus-centre.fr/api/login",
         {
           method: "POST",
           headers: {
