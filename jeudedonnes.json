@@ -1,0 +1,128 @@
+//Requête qu'il faut envoyer à Postman ci-dessus Test réussi
+
+//cas qui marche
+{
+  "email": "moussagueyebb@gmail.com",
+  "codev": 15,
+  "date_livraison": "2024-03-15",
+  "date_commande": "2024-02-05",
+  "commande_total_ht":94.96 ,
+  "total_tva": 20,
+  "etat": "en cours",
+  "com_payee": true,
+  "com_prete": false,
+  "lignecommande": [
+    {
+      "reference": "4015",
+      "quantite": 2,
+      "lignecommande_total_ht": 32.56
+    },
+    {
+      "reference": "4025",
+      "quantite": 3,
+      "lignecommande_total_ht": 28.50
+    },
+    {
+      "reference": "4031",
+      "quantite": 1,
+      "lignecommande_total_ht": 33.90
+    }
+
+//cas qui marche avec un autre mail
+{
+  "email": "arthur@test.com",
+  "codev": "15",
+  "date_livraison": "2024-02-06",
+  "date_commande": "2024-02-05",
+  "commande_total_ht":94.96 ,
+  "total_tva": 20,
+  "etat": "en cours",
+  "com_payee": true,
+  "com_prete": false,
+  "lignecommande": [
+    {
+      "reference": "4015",
+      "quantite": 2,
+      "lignecommande_total_ht": 32.56
+    },
+    {
+      "reference": "4025",
+      "quantite": 3,
+      "lignecommande_total_ht": 28.50
+    },
+    {
+      "reference": "4031",
+      "quantite": 1,
+      "lignecommande_total_ht": 33.90
+    }
+  ]
+}
+
+    //mail non existant
+{
+  "email": "moussagueyebbbbbbbbbbb@gmail.com",
+  "codev": "15",
+  "date_livraison": "2024-03-15",
+  "date_commande": "2024-02-20",
+  "commande_total_ht":94.96 ,
+  "total_tva": 20,
+  "etat": "en cours",
+  "com_payee": true,
+  "com_prete": false,
+  "lignecommande": [
+    {
+      "reference": "4015",
+      "quantite": 2,
+      "lignecommande_total_ht": 32.56
+    },
+    {
+      "reference": "4025",
+      "quantite": 3,
+      "lignecommande_total_ht": 28.50
+    },
+    {
+      "reference": "4031",
+      "quantite": 1,
+      "lignecommande_total_ht": 33.90
+    }
+  ]
+}
+
+}
+
+    //code vendeur inexistant
+    {
+      "email": "moussagueyebb@gmail.com",
+      "codev": "999",
+      "date_livraison": "2024-03-15",
+      "date_commande": "2024-02-20",
+      "commande_total_ht":94.96 ,
+      "total_tva": 20,
+      "etat": "en cours",
+      "com_payee": true,
+      "com_prete": false,
+      "lignecommande": [
+        {
+          "reference": "4015",
+          "quantite": 2,
+          "lignecommande_total_ht": 32.56
+        },
+        {
+          "reference": "4025",
+          "quantite": 3,
+          "lignecommande_total_ht": 28.50
+        },
+        {
+          "reference": "4031",
+          "quantite": 1,
+          "lignecommande_total_ht": 33.90
+        }
+      ]
+    }
+
+    }
+
+
+
+
+

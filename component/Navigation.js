@@ -1,3 +1,5 @@
+// @ts-ignore
+
 import React, { Component, useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import Home from "../screens/Home";
@@ -13,6 +15,7 @@ import { AuthContext } from "../middleware/AuthContext";
 import Createacc from "../screens/Createacc";
 import Produits from "../screens/Produits";
 import {AntDesign, Entypo} from "@expo/vector-icons";
+import Profil from "../screens/Profil";
 const Drawer = createDrawerNavigator();
 
 export default function navigation() {
@@ -34,6 +37,7 @@ export default function navigation() {
                         marginLeft: -25,
                         fontSize: 15,
                     },
+                    drawerPosition: 'right',
                 }}
             >
                 <Drawer.Screen
@@ -65,7 +69,7 @@ export default function navigation() {
                         options={() => ({
                             header: (props) => <Navbar {...props} title="Logout"></Navbar>,
                             drawerIcon: (color) => (
-                                <Ionicons name="home-outline" size={22} color={'#582900'} />
+                                <Ionicons name="log-out-outline" size={22} color={'#582900'} />
                             ),
                         })}
                     />
@@ -81,6 +85,19 @@ export default function navigation() {
                         ),
                     })}
                 />
+                {isLoggedIn ? (
+                <Drawer.Screen
+                    name="Profil"
+                    component={Profil}
+                    options={() => ({
+                        header: (props) => <Navbar {...props} title="Profil"></Navbar>,
+                        drawerIcon: (color) => (
+                            <Entypo name="user" size={22} color={'#582900'} />
+                        ),
+
+                    })}
+                />
+                ) : (
                 <Drawer.Screen
                     name="Createacc"
                     component={Createacc}
@@ -88,7 +105,7 @@ export default function navigation() {
                         headerShown: false,
                         drawerLabel: () => null,
                     }}
-                />
+                />)}
 
             </Drawer.Navigator>
         </NavigationContainer>

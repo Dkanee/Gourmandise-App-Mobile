@@ -16,7 +16,8 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Produits({ navigation }) {
+
+export default function Produits({ navigation,route }) {
     const [data, setData] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -88,6 +89,22 @@ export default function Produits({ navigation }) {
         }
     };
 
+    // const handleQuantityChange = (item, delta) => {
+    //     setData((currentData) =>
+    //         currentData.map((prod) => {
+    //             if (prod.reference === item.reference) {
+    //                 const newQuantity = Math.max(1, prod.quantity + delta);
+    //                 return { ...prod, quantity: newQuantity };
+    //             }
+    //             return prod;
+    //         })
+    //     );
+    //     if (selectedProduct && selectedProduct.reference === item.reference) {
+    //         const newQuantity = Math.max(1, selectedProduct.quantity + delta);
+    //         console.log("quantite : " + newQuantity);
+    //         setSelectedProduct({ ...selectedProduct, quantity: newQuantity });
+    //     }
+    // };
     const handleQuantityChange = (item, delta) => {
         setData((currentData) =>
             currentData.map((prod) => {
@@ -100,22 +117,34 @@ export default function Produits({ navigation }) {
         );
         if (selectedProduct && selectedProduct.reference === item.reference) {
             const newQuantity = Math.max(1, selectedProduct.quantity + delta);
-            setSelectedProduct({ ...selectedProduct, quantity: newQuantity });
+            setSelectedProduct({ ...selectedProduct, quantity: newQuantity, inputQuantity: newQuantity.toString() });
         }
     };
 
+    // const openModal = (product) => {
+    //     setSelectedProduct(product);
+    //     setModalVisible(true);
+    //
+    // };
     const openModal = (product) => {
-        setSelectedProduct(product);
+
+        if (!product.quantity) {
+            product.quantity = 1;
+        }
+
+        setSelectedProduct({ ...product, inputQuantity: product.quantity.toString() });
         setModalVisible(true);
     };
+
 
     const handleAddToCartFromModal = (product) => {
         console.log("Ajout au panier depuis la modal :", product);
         console.log("Description du produit :", selectedProduct.description);
 
-        // Ajouter ici la logique pour ajouter le produit au panier
+
         setModalVisible(false);
     };
+
 
     const renderItem = ({ item }) => (
         <TouchableOpacity onPress={() => openModal(item)} style={styles.card}>
@@ -127,7 +156,22 @@ export default function Produits({ navigation }) {
                 </Text>
             </View>
         </TouchableOpacity>
-    );
+        );
+    useEffect(() => {
+        if (route.params?.selectedProduct) {
+            let productDetails = route.params.selectedProduct;
+
+
+            // Assurez-vous que productDetails a une propriété `quantity`
+            if (!productDetails.quantity) {
+                productDetails = { ...productDetails, quantity: 1 };
+            }
+            setSelectedProduct(productDetails);
+            setModalVisible(true);
+        }
+    }, [route.params?.selectedProduct]);
+
+
 
     return (
         <SafeAreaView style={styles.safeAreaContainer}>
@@ -183,6 +227,7 @@ export default function Produits({ navigation }) {
                                     <TextInput
                                         style={styles.quantityInput}
                                         keyboardType='numeric'
+                                        placeholder="1"
                                         value={selectedProduct.inputQuantity}
                                         onChangeText={(text) => setSelectedProduct({ ...selectedProduct, inputQuantity: text })}
                                         onEndEditing={() => {
@@ -211,8 +256,12 @@ export default function Produits({ navigation }) {
                 </TouchableOpacity>
             </Modal>
         </SafeAreaView>
+
     );
+
 }
+
+
 const screenWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
@@ -250,7 +299,7 @@ const styles = StyleSheet.create({
     fullSizeImage: {
         width: '100%',        // Prend toute la largeur de l'écran
         height: 300,          // Hauteur fixe, ajustez selon vos besoins
-        resizeMode: 'cover',  // Assure que l'image couvre toute la largeur sans être déformée
+        resizeMode: 'cover',  // Assure que l'image couvre toute la largeur sans être déforméee
         alignSelf: 'flex-start' // Alignement en haut
     },
     modalContent: {

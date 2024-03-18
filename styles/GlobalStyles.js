@@ -10,9 +10,14 @@ export const styles = StyleSheet.create({
     height : 90,
   },
   titleNav: {
+    flex:1,
     fontSize: 18,
-    marginLeft: 10,
     color:'white',
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign:"center",
+    fontWeight:"bold",
+
   },
   container: {
     flex: 1,

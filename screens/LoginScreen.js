@@ -13,7 +13,7 @@ import { AuthContext } from "../middleware/AuthContext";
 import navigation from "../component/Navigation";
 import Toast from "react-native-toast-message";
 
-const { width, height } = Dimensions.get("window"); // Obtenez les dimensions de l'écran
+const { width, height } = Dimensions.get("window"); // Obtenirr les dimensions de l'écran
 
 export default function LoginScreen({ title ,navigation }) {
   const [email, setEmail] = useState("");
@@ -43,7 +43,7 @@ export default function LoginScreen({ title ,navigation }) {
 
         if (data && data.success) {
           login();
-          console.log("Bien joué");
+          navigation.navigate("Home");
         } else {
           console.error("Échec de la connexion");
         }

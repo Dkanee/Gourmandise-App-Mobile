@@ -1,18 +1,43 @@
 import {StyleSheet} from "react-native";
+import {COLORS, SIZES} from "../assets/constants/constants";
 
 export const styles = StyleSheet.create({
+
+    searchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 40,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 10,
+        marginBottom: 15,
+        paddingHorizontal: 10,
+        width: 360,
+        backgroundColor: '#8A6642',
+    },
+    searchIcon: {
+        color: '#FFFFFF',
+    },
+    searchInput: {
+        flex: 1,
+        fontFamily: 'regular',
+        paddingRight: 10, // Ajustez selon l'espace nécessaire pour l'icône
+        color: '#FFFFFF',
+    },
     container: {
         flex: 1,
         paddingHorizontal: 20,
-        alignItems: "center",
+        alignItems: 'center',
     },
     title: {
-        fontSize: 30,
-        fontWeight: "bold",
-        color: "#781e1e",
-        textAlign: "center",
+        fontSize: 23,
+        fontWeight: 'bold',
+        color: '#781e1e',
         marginTop: 20,
+        marginRight: 180,
+        marginBottom: 20,
     },
+
     centeredRectangleTitle: {
         fontSize: 20,
         marginBottom: 7,
@@ -91,12 +116,5 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 10,
     },
-    searchInput: {
-        height: 40,
-        borderColor: "gray",
-        borderWidth: 1,
-        marginBottom: 10,
-        paddingHorizontal: 10,
-        width: "100%",
-    },
+
 });

@@ -7,13 +7,27 @@ export default function Navbar({ title, navigation, route }) {
     return (
 
         <View style={styles.containerNav}>
+
+            {/*<TouchableOpacity onPress={() => navigation.navigate("Login")}>*/}
+            {/*    <Entypo name="user" size={24} color="white" />*/}
+            {/*</TouchableOpacity>*/}
+
+            {route.name !== "Produits" && route.name !== "Login" && route.name !== "Profil"  ? (
+                <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                    <Entypo name="user" size={24} color="white" />
+                </TouchableOpacity>
+            ) : (
+                <View style={{ width: 24 }} />
+            )}
             {route.name !== "Accueil" ? (
+
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <AntDesign name="arrowleft" size={24} color="white" />
                 </TouchableOpacity>
             ) : (
-                <View style={{ width: 24 }} /> // Espace réservé pour l'icône, mais invisible
+                <View style={{ width: 24 }} />
             )}
+
             <Text style={styles.titleNav}>{title}</Text>
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
                 <Entypo name="menu" size={24} color="white" />
