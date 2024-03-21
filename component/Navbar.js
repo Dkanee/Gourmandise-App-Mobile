@@ -12,7 +12,7 @@ export default function Navbar({ title, navigation, route }) {
             {/*    <Entypo name="user" size={24} color="white" />*/}
             {/*</TouchableOpacity>*/}
 
-            {route.name !== "Produits" && route.name !== "Login" && route.name !== "Profil"  ? (
+            {route.name !== "Produits" && route.name !== "Login" && route.name !== "Profil" && route.name !== "Panier"  ? (
                 <TouchableOpacity onPress={() => navigation.navigate("Login")}>
                     <Entypo name="user" size={24} color="white" />
                 </TouchableOpacity>

@@ -16,6 +16,7 @@ import Createacc from "../screens/Createacc";
 import Produits from "../screens/Produits";
 import {AntDesign, Entypo} from "@expo/vector-icons";
 import Profil from "../screens/Profil";
+import Panier from "../screens/Panier";
 const Drawer = createDrawerNavigator();
 
 export default function navigation() {
@@ -85,6 +86,17 @@ export default function navigation() {
                         ),
                     })}
                 />
+
+                <Drawer.Screen
+                    name="Panier"
+                    component={Panier}
+                    options={() => ({
+                        header: (props) => <Navbar {...props} title="Panier"></Navbar>,
+                        drawerIcon: (color) => (
+                            <Entypo name="shopping-cart" size={22} color={'#582900'} />
+                        ),
+                    })}
+                />
                 {isLoggedIn ? (
                 <Drawer.Screen
                     name="Profil"
@@ -98,6 +110,7 @@ export default function navigation() {
                     })}
                 />
                 ) : (
+
                 <Drawer.Screen
                     name="Createacc"
                     component={Createacc}

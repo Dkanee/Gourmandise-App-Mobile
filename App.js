@@ -36,7 +36,7 @@ export default function App() {
   return (
     <AuthProvider>
       <View style={{ flex: 1 }}>
-        <Panier/>
+        <Navigation/>
       </View>
     </AuthProvider>
   );
