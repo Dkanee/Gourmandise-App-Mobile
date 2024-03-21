@@ -12,49 +12,65 @@ import { styles } from "../styles/AppStyles";
 import { AuthContext } from "../middleware/AuthContext";
 import navigation from "../component/Navigation";
 import Toast from "react-native-toast-message";
+import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get("window"); // Obtenirr les dimensions de l'écran
 
-export default function LoginScreen({ title ,navigation }) {
+export default function LoginScreen({ title }) {
+    const navigation=useNavigation();
   const [email, setEmail] = useState("");
   const [motdepasse, setPassword] = useState("");
   const { login } = useContext(AuthContext);
 
-  const handleLogin = async () => {
-    try {
-      const response = await fetch(
-        "https://gourmandise.mgueye-ba.v70208.campus-centre.fr/api/login",
-        {
-          method: "POST",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            motdepasse,
-          }),
-        }
-      );
-      console.log(response.status);
+    const handleLogin = async () => {
+        try {
+            const response = await fetch(
+                "https://gourmandise.mgueye-ba.v70208.campus-centre.fr/api/login",
+                {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email,
+                        motdepasse,
+                    }),
+                }
+            );
 
-      if (response.ok) {
-        const data = await response.json();
-
-        if (data && data.success) {
-          login();
-          navigation.navigate("Home");
-        } else {
-          console.error("Échec de la connexion");
+            if (response.ok) {
+                const data = await response.json();
+                if (data && data.success) {
+                    // Ici, vous devez passer le token et les informations de l'utilisateur à la fonction login
+                    login(data.token, data.user); // Assurez-vous que l'API renvoie un objet `user` avec les infos nécessaires
+                    navigation.navigate("Accueil");
+                    console.log(data.token, data.user);
+                } else {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Échec de la connexion',
+                        text2: data.message || "Une erreur s'est produite.",
+                    });
+                }
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Erreur de connexion',
+                    text2: `Erreur HTTP: ${response.status}`,
+                });
+            }
+        } catch (error) {
+            console.error("Erreur lors de la connexion :", error);
+            Toast.show({
+                type: 'error',
+                text1: 'Erreur de connexion',
+                text2: 'Une erreur inattendue s\'est produite.',
+            });
         }
-      } else {
-        console.error("Erreur HTTP lors de la connexion:", response.status);
-      }
-    } catch (error) {
-      console.error("Erreur lors de la connexion :", error);
-    }
-  };
-  const handleForgotPassword = () => {
+    };
+
+    const handleForgotPassword = () => {
     // Gestion du "Mot de passe oublié"
   };
 

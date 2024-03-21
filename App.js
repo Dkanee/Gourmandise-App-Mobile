@@ -11,6 +11,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { AuthProvider, AuthContext } from "./middleware/AuthContext";
 import Produits from "./screens/Produits";
 import Profil from "./screens/Profil"
+import Panier from "./screens/Panier"
 
 export default function App() {
     const[fontsLoaded] = useFonts({
@@ -35,7 +36,7 @@ export default function App() {
   return (
     <AuthProvider>
       <View style={{ flex: 1 }}>
-        <Navigation/>
+        <Panier/>
       </View>
     </AuthProvider>
   );

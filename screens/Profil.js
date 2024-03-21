@@ -56,11 +56,11 @@ const renderScene = SceneMap({
 const Profil = () => {
     const layout = useWindowDimensions();
     const [index, setIndex] = useState(0);
-    //const { userInfo } = useContext(AuthContext);
+    const { userInfo } = useContext(AuthContext);
 
     const [routes] = useState([
         { key: "1", title: "Dernières commandes" },
-        { key: "2", title: "A voir" },
+        { key: "2", title: "Wishlist" },
     ]);
 
     const renderTabBar = (props) => (
@@ -121,7 +121,7 @@ const Profil = () => {
                         marginVertical: 8,
                     }}
                 >
-                    Nom
+                    Nom: {userInfo ? userInfo.nom : 'Chargement...'}
                 </Text>
                 <Text
                     style={{
@@ -129,7 +129,7 @@ const Profil = () => {
 
                     }}
                 >
-                    Téléphone:
+                    Téléphone: {userInfo ? userInfo.telephone : 'Chargement...'}
                 </Text>
 
                 <View
@@ -146,7 +146,7 @@ const Profil = () => {
                             marginLeft: 4,
                         }}
                     >
-                        Mail:
+                        Email: {userInfo ? userInfo.email : 'Chargement...'}
                     </Text>
                 </View>
 
