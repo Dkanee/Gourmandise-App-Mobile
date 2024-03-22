@@ -136,14 +136,77 @@ export default function Produits({ navigation,route }) {
         setModalVisible(true);
     };
 
+    // const handleAddToCartFromModal = async (product) => {
+    //     // Récupérer le panier actuel
+    //     const cartJson = await AsyncStorage.getItem('cart');
+    //     let cart = cartJson ? JSON.parse(cartJson) : [];
+    //
+    //     // Vérifier si le produit est déjà dans le panier
+    //     const index = cart.findIndex((item) => item.id === product.id);
+    //
+    //     if (index !== -1) {
+    //         // Si le produit est déjà dans le panier, augmentez la quantité
+    //         cart[index].quantite += product.quantity;
+    //     } else {
+    //         // Sinon, ajoutez le nouveau produit au panier
+    //         cart.push({
+    //             id: product.id,
+    //             nom: product.designation,
+    //             prix: (product.prix_unitaire_HT * 0.2 + product.prix_unitaire_HT).toFixed(2), // Inclut la TVA
+    //             quantite: product.quantity,
+    //             image: product.url_image
+    //         });
+    //     }
+    //
+    //     // Sauvegarder le panier mis à jour
+    //     await AsyncStorage.setItem('cart', JSON.stringify(cart));
+    //
+    //     // Fermer la modale
+    //     setModalVisible(false);
+    // };
 
-    const handleAddToCartFromModal = (product) => {
-        console.log("Ajout au panier depuis la modal :", product);
-        console.log("Description du produit :", selectedProduct.description);
 
 
+    // const handleAddToCartFromModal = (product) => {
+    //     console.log("Ajout au panier depuis la modal :", product);
+    //     console.log("Description du produit :", selectedProduct.description);
+    //
+    //
+    //     setModalVisible(false);
+    // };
+    const handleAddToCartFromModal = async (product) => {
+        const cartJson = await AsyncStorage.getItem('cart');
+        let cart = cartJson ? JSON.parse(cartJson) : [];
+
+        // Trouvez l'index du produit dans le panier, en utilisant 'id' ou un autre identifiant unique
+        const productIndex = cart.findIndex((item) => item.id === product.id);
+
+        if (productIndex !== -1) {
+            // Si le produit existe déjà, augmentez sa quantité et ajustez le prix
+            cart[productIndex].quantite += 1; // Ajoutez la quantité souhaitée
+            // Assurez-vous de recalculer le prix total pour ce produit en fonction de la nouvelle quantité
+            // Exemple simple, supposant que 'prix' est le prix unitaire du produit
+            cart[productIndex].prixTotal = (parseFloat(cart[productIndex].prix) * cart[productIndex].quantite).toFixed(2);
+        } else {
+            // Sinon, ajoutez le nouveau produit au panier
+            cart.push({
+                id: product.id.toString(), // Assurez-vous que l'ID est une chaîne
+                nom: product.nom,
+                prix: product.prix, // Prix unitaire
+                prixTotal: product.prix, // Le prix total initial est le même que le prix unitaire
+                quantite: 1, // Commencez avec une quantité de 1
+                image: product.image
+            });
+        }
+
+        // Sauvegardez le panier mis à jour dans AsyncStorage
+        await AsyncStorage.setItem('cart', JSON.stringify(cart));
+
+        // Fermez la modale et potentiellement notifiez l'utilisateur
         setModalVisible(false);
+        // Ajoutez ici un feedback pour l'utilisateur, comme un toast
     };
+
 
 
     const renderItem = ({ item }) => (
