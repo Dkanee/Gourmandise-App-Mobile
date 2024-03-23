@@ -6,9 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 const Panier = () => {
     const [articlesPanier, setArticlesPanier] = useState([
-        // { id: '1004', nom: "TARTE MIGHTY CHOCOLAT",  prix: 23, quantite: 1, image: "https://cdn.pixabay.com/photo/2017/05/04/21/23/cupcakes-2285209_1280.jpg" },
-        // { id: '1007', nom: "CREPE BANANE CHOCOLAT", prix: 18, quantite: 1, image: "https://cdn.pixabay.com/photo/2018/12/04/21/15/gingerbread-3856631_1280.jpg" },
-        // { id: '1015', nom: "SUCETTE BOULE FRUIT",  prix: 24.50, quantite: 1, image: "https://cdn.pixabay.com/photo/2017/06/22/10/01/hands-2430200_1280.jpg" },
+
 
     ]);
 
@@ -55,53 +53,114 @@ const Panier = () => {
     );
 
 
+    // return (
+    //     <View style={styles.container}>
+    //         <FlatList
+    //             data={articlesPanier}
+    //             keyExtractor={(item) => item.id ? item.id: item.reference}
+    //             renderItem={({ item }) => (
+    //                 <View style={styles.card}>
+    //                     <Image source={{ uri: item.image }} style={styles.productImage} />
+    //                     <View style={styles.articleDetails}>
+    //                         <Text style={styles.articleNom}>{item.nom}</Text>
+    //                         {/* Icône text-document */}
+    //                         <TouchableOpacity onPress={() => openModal(item)} style={styles.iconContainer}>
+    //                             <Entypo name="text-document" size={24} color="#582900" />
+    //                         </TouchableOpacity>
+    //                         <View style={styles.prixQuantiteContainer}>
+    //                             <View style={styles.quantiteContainer}>
+    //                                 <TouchableOpacity onPress={() => ajusterQuantite(item.id, -1)}>
+    //                                     <MaterialIcons name="remove" size={24} color="#333" />
+    //                                 </TouchableOpacity>
+    //
+    //                                 <TextInput
+    //                                     style={styles.quantiteText}
+    //                                     value={item.quantite.toString()}
+    //                                     keyboardType="numeric"
+    //                                     onChangeText={(text) => {
+    //                                         const newQuantity = parseInt(text) || 0;
+    //                                         setArticlesPanier(articlesPanier.map(article => {
+    //                                             if (article.id === item.id) {
+    //                                                 return { ...article, quantite: newQuantity };
+    //                                             }
+    //                                             return article;
+    //                                         }));
+    //                                     }}
+    //                                 />
+    //                                 <TouchableOpacity onPress={() => ajusterQuantite(item.id, 1)}>
+    //                                     <MaterialIcons name="add" size={24} color="#333" />
+    //                                 </TouchableOpacity>
+    //                                 <TouchableOpacity style={styles.iconTrash} onPress={() => supprimerArticleDuPanier(item.id, -1) }>
+    //                                     <Entypo name="trash" size={24} color="#9E2B40"  />
+    //                                 </TouchableOpacity>
+    //                             </View>
+    //                             <Text style={styles.articlePrix}>{item.prix} €</Text>
+    //                         </View>
+    //                     </View>
+    //                 </View>
+    //             )}
+    //         />
+    //         <View style={styles.totalContainer}>
+    //             <Text style={styles.totalText}>Total: €{totalPanier}</Text>
+    //             <TouchableOpacity style={styles.checkoutButton}>
+    //                 <Text style={styles.checkoutButtonText}>Paiement</Text>
+    //             </TouchableOpacity>
+    //         </View>
+    //     </View>
+    //
+    //
+    //
+    // );
+//};
     return (
         <View style={styles.container}>
-            <FlatList
-                data={articlesPanier}
-                keyExtractor={(item) => item.id ? item.id: item.reference}
-                renderItem={({ item }) => (
-                    <View style={styles.card}>
-                        <Image source={{ uri: item.image }} style={styles.productImage} />
-                        <View style={styles.articleDetails}>
-                            <Text style={styles.articleNom}>{item.nom}</Text>
-                            {/* Icône text-document */}
-                            <TouchableOpacity onPress={() => openModal(item)} style={styles.iconContainer}>
-                                <Entypo name="text-document" size={24} color="#582900" />
-                            </TouchableOpacity>
-                            <View style={styles.prixQuantiteContainer}>
-                                <View style={styles.quantiteContainer}>
-                                    <TouchableOpacity onPress={() => ajusterQuantite(item.id, -1)}>
-                                        <MaterialIcons name="remove" size={24} color="#333" />
-                                    </TouchableOpacity>
+            {articlesPanier.length > 0 ? (
+                <FlatList
+                    data={articlesPanier}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <View style={styles.card}>
+                            <Image source={{ uri: item.image }} style={styles.productImage} />
+                            <View style={styles.articleDetails}>
+                                <Text style={styles.articleNom}>{item.nom}</Text>
+                                <TouchableOpacity onPress={() => openModal(item)} style={styles.iconContainer}>
+                                    <Entypo name="text-document" size={24} color="#582900" />
+                                                          </TouchableOpacity>
+                                <View style={styles.prixQuantiteContainer}>
+                                    <View style={styles.quantiteContainer}>
+                                        <TouchableOpacity onPress={() => ajusterQuantite(item.id, -1)}>
+                                            <MaterialIcons name="remove" size={24} color="#333" />
+                                        </TouchableOpacity>
+                                        <TextInput
+                                            style={styles.quantiteText}
+                                            value={item.quantite.toString()}
+                                            keyboardType="numeric"
+                                            editable={false}
+                                        />
+                                        <TouchableOpacity onPress={() => ajusterQuantite(item.id, 1)}>
+                                            <MaterialIcons name="add" size={24} color="#333" />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.iconTrash} onPress={() => supprimerArticleDuPanier(item.id)}>
+                                            <Entypo name="trash" size={24} color="#9E2B40" />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <Text style={styles.articlePrix}>{`${(parseFloat(item.prix) * item.quantite).toFixed(2)} €`}</Text>
 
-                                    <TextInput
-                                        style={styles.quantiteText}
-                                        value={item.quantite.toString()}
-                                        keyboardType="numeric"
-                                        onChangeText={(text) => {
-                                            const newQuantity = parseInt(text) || 0;
-                                            setArticlesPanier(articlesPanier.map(article => {
-                                                if (article.id === item.id) {
-                                                    return { ...article, quantite: newQuantity };
-                                                }
-                                                return article;
-                                            }));
-                                        }}
-                                    />
-                                    <TouchableOpacity onPress={() => ajusterQuantite(item.id, 1)}>
-                                        <MaterialIcons name="add" size={24} color="#333" />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={styles.iconTrash} onPress={() => supprimerArticleDuPanier(item.id, -1) }>
-                                        <Entypo name="trash" size={24} color="#9E2B40"  />
-                                    </TouchableOpacity>
                                 </View>
-                                <Text style={styles.articlePrix}>{item.prix} €</Text>
                             </View>
                         </View>
-                    </View>
-                )}
-            />
+                    )}
+                />
+            ) : (
+                // Si le panier est vide, affichez un tumbleweed
+                <View style={styles.emptyContainer}>
+                    <Image
+                        source={{ uri: "https://cdn.dribbble.com/users/860366/screenshots/6364054/desolazione_empty_1.gif" }} // Remplacez par l'URL de votre image
+                        style={styles.tumbleweedImage}
+                    />
+                    <Text style={styles.panierVide}>Le panier est vide...</Text>
+                </View>
+            )}
             <View style={styles.totalContainer}>
                 <Text style={styles.totalText}>Total: €{totalPanier}</Text>
                 <TouchableOpacity style={styles.checkoutButton}>
@@ -109,9 +168,6 @@ const Panier = () => {
                 </TouchableOpacity>
             </View>
         </View>
-
-
-
     );
 };
 
@@ -119,7 +175,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 21,
-        backgroundColor: '#f2f2f2',
+        backgroundColor: '#FBFBFB',
     },
     iconContainer:{
         position: 'static',
@@ -205,8 +261,22 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    tumbleweedImage: {
+        width: 300,
+        height: 300,
+        marginBottom: 20,
+    },
+    panierVide:{
+        fontSize: 18,
+        fontWeight: 'bold',
+
+    }
 });
 
 export default Panier;
-
-

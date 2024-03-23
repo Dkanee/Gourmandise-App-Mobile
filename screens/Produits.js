@@ -174,38 +174,61 @@ export default function Produits({ navigation,route }) {
     //
     //     setModalVisible(false);
     // };
+    // const handleAddToCartFromModal = async (product) => {
+    //     // Récupérer le panier actuel
+    //     const cartJson = await AsyncStorage.getItem('cart');
+    //     let cart = cartJson ? JSON.parse(cartJson) : [];
+    //
+    //     // Vérifier si le produit est déjà dans le panier
+    //     // Utilisez product.reference au lieu de product.id
+    //     const index = cart.findIndex((item) => item.id === product.reference);
+    //
+    //     if (index !== -1) {
+    //         // Si le produit est déjà dans le panier, augmentez la quantité
+    //         cart[index].quantite += 1; // ou += product.quantite; si vous gérez la quantité dans Produits.js
+    //     } else {
+    //         // Sinon, ajoutez le nouveau produit au panier avec 'reference' comme 'id'
+    //         cart.push({
+    //             id: product.reference.toString(), // Utilisez 'reference' comme identifiant unique
+    //             nom: product.designation, // Assurez-vous d'utiliser les bons champs
+    //             prix: parseFloat((product.prix_unitaire_HT * 1.2).toFixed(2)), // Ajoutez 20% de TVA
+    //             quantite: 1, // ou product.quantite; si vous gérez la quantité dans Produits.js
+    //             image: product.url_image
+    //         });
+    //     }
+    //
+    //     // Sauvegarder le panier mis à jour
+    //     await AsyncStorage.setItem('cart', JSON.stringify(cart));
+    //
+    //     // Fermer la modale et potentiellement notifier l'utilisateur
+    //     setModalVisible(false);
+    //     // Ajouter ici un feedback pour l'utilisateur (ex. un message toast)
+    // };
+
     const handleAddToCartFromModal = async (product) => {
         const cartJson = await AsyncStorage.getItem('cart');
         let cart = cartJson ? JSON.parse(cartJson) : [];
 
-        // Trouvez l'index du produit dans le panier, en utilisant 'id' ou un autre identifiant unique
-        const productIndex = cart.findIndex((item) => item.id === product.id);
+        const productIndex = cart.findIndex((item) => item.id === product.id || item.reference === product.reference);
 
         if (productIndex !== -1) {
-            // Si le produit existe déjà, augmentez sa quantité et ajustez le prix
-            cart[productIndex].quantite += 1; // Ajoutez la quantité souhaitée
-            // Assurez-vous de recalculer le prix total pour ce produit en fonction de la nouvelle quantité
-            // Exemple simple, supposant que 'prix' est le prix unitaire du produit
-            cart[productIndex].prixTotal = (parseFloat(cart[productIndex].prix) * cart[productIndex].quantite).toFixed(2);
+            cart[productIndex].quantite += 1;
+            cart[productIndex].prix = parseFloat(cart[productIndex].prix) * cart[productIndex].quantite;
         } else {
-            // Sinon, ajoutez le nouveau produit au panier
             cart.push({
-                id: product.id.toString(), // Assurez-vous que l'ID est une chaîne
-                nom: product.nom,
-                prix: product.prix, // Prix unitaire
-                prixTotal: product.prix, // Le prix total initial est le même que le prix unitaire
-                quantite: 1, // Commencez avec une quantité de 1
-                image: product.image
+                id: product.id || product.reference,
+                nom: product.nom || product.designation,
+                prix: parseFloat(product.prix_unitaire_HT * 1.2).toFixed(2),
+                quantite: product.quantity,
+                image: product.url_image
             });
         }
 
-        // Sauvegardez le panier mis à jour dans AsyncStorage
         await AsyncStorage.setItem('cart', JSON.stringify(cart));
-
-        // Fermez la modale et potentiellement notifiez l'utilisateur
         setModalVisible(false);
-        // Ajoutez ici un feedback pour l'utilisateur, comme un toast
     };
+
+
 
 
 
@@ -219,7 +242,7 @@ export default function Produits({ navigation,route }) {
                 </Text>
             </View>
         </TouchableOpacity>
-        );
+    );
     useEffect(() => {
         if (route.params?.selectedProduct) {
             let productDetails = route.params.selectedProduct;
@@ -503,7 +526,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
-        
+
     },
     buttonClose: {
         backgroundColor: '#2196F3',
