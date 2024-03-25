@@ -17,6 +17,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
+
+
 export default function Produits({ navigation,route }) {
     const [data, setData] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
@@ -118,24 +120,55 @@ export default function Produits({ navigation,route }) {
     };
 
 
+    // const handleAddToCartFromModal = async (product) => {
+    //     const cartJson = await AsyncStorage.getItem('cart');
+    //     let cart = cartJson ? JSON.parse(cartJson) : [];
+    //
+    //     const productIndex = cart.findIndex((item) => item.reference === product.reference );
+    //
+    //     if (productIndex !== -1) {
+    //         cart[productIndex].quantity += 1;
+    //         cart[productIndex].prix = parseFloat(cart[productIndex].prix) * cart[productIndex].quantity;
+    //     } else {
+    //         cart.push({
+    //             id: product.reference,
+    //             nom: product.nom || product.designation,
+    //             prix: parseFloat(product.prix_unitaire_HT * 1.2).toFixed(2),
+    //             quantite: product.quantity,
+    //             image: product.url_image
+    //         });
+    //         console.log(product.reference);
+    //     }
+    //
+    //     await AsyncStorage.setItem('cart', JSON.stringify(cart));
+    //     setModalVisible(false);
+    // };
+
     const handleAddToCartFromModal = async (product) => {
         const cartJson = await AsyncStorage.getItem('cart');
         let cart = cartJson ? JSON.parse(cartJson) : [];
 
-        const productIndex = cart.findIndex((item) => item.reference === product.reference );
+        // Utilisez l'ID ou une autre propriété unique comme référence.
+        // Assurez-vous que la propriété utilisée ici est cohérente dans tout le panier.
+        const productIndex = cart.findIndex((item) => item.id === (product.id || product.reference));
 
         if (productIndex !== -1) {
-            cart[productIndex].quantity += 1;
-            cart[productIndex].prix = parseFloat(cart[productIndex].prix) * cart[productIndex].quantity;
+            // Le produit existe déjà dans le panier, augmentez sa quantité.
+            const updatedQuantity = cart[productIndex].quantite + (product.quantity || 1); // Utilisez product.quantity ou 1 si non spécifié.
+            cart[productIndex] = {
+                ...cart[productIndex],
+                quantite: updatedQuantity,
+                prix: parseFloat(cart[productIndex].prix) + (parseFloat(product.prix_unitaire_HT) * 1.2 * (product.quantity || 1)) // Mise à jour du prix total en conséquence.
+            };
         } else {
+            // Le produit n'existe pas, ajoutez-le au panier.
             cart.push({
-                id: product.reference,
+                id: product.id || product.reference,
                 nom: product.nom || product.designation,
-                prix: parseFloat(product.prix_unitaire_HT * 1.2).toFixed(2),
-                quantite: product.quantity,
+                prix: parseFloat(product.prix_unitaire_HT * 1.2 * (product.quantity || 1)).toFixed(2), // Calculez le prix en ajoutant 20% de TVA.
+                quantite: product.quantity || 1,
                 image: product.url_image
             });
-            console.log(product.reference);
         }
 
         await AsyncStorage.setItem('cart', JSON.stringify(cart));
@@ -152,7 +185,8 @@ export default function Produits({ navigation,route }) {
             <View style={styles.cardContent}>
                 <Text style={styles.productName}>{item.designation}</Text>
                 <Text style={styles.productPrice}>
-                    {((item.prix_unitaire_HT * 0.2 + item.prix_unitaire_HT) * item.quantity).toFixed(2)}€
+                    {/*{((item.prix_unitaire_HT * 0.2 + item.prix_unitaire_HT) * item.quantity).toFixed(2)}€*/}
+                    {((item.prix_unitaire_HT * 0.2 + item.prix_unitaire_HT)).toFixed(2)}€
                 </Text>
             </View>
         </TouchableOpacity>
