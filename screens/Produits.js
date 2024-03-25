@@ -89,22 +89,7 @@ export default function Produits({ navigation,route }) {
         }
     };
 
-    // const handleQuantityChange = (item, delta) => {
-    //     setData((currentData) =>
-    //         currentData.map((prod) => {
-    //             if (prod.reference === item.reference) {
-    //                 const newQuantity = Math.max(1, prod.quantity + delta);
-    //                 return { ...prod, quantity: newQuantity };
-    //             }
-    //             return prod;
-    //         })
-    //     );
-    //     if (selectedProduct && selectedProduct.reference === item.reference) {
-    //         const newQuantity = Math.max(1, selectedProduct.quantity + delta);
-    //         console.log("quantite : " + newQuantity);
-    //         setSelectedProduct({ ...selectedProduct, quantity: newQuantity });
-    //     }
-    // };
+
     const handleQuantityChange = (item, delta) => {
         setData((currentData) =>
             currentData.map((prod) => {
@@ -121,11 +106,7 @@ export default function Produits({ navigation,route }) {
         }
     };
 
-    // const openModal = (product) => {
-    //     setSelectedProduct(product);
-    //     setModalVisible(true);
-    //
-    // };
+
     const openModal = (product) => {
 
         if (!product.quantity) {
@@ -136,92 +117,25 @@ export default function Produits({ navigation,route }) {
         setModalVisible(true);
     };
 
-    // const handleAddToCartFromModal = async (product) => {
-    //     // Récupérer le panier actuel
-    //     const cartJson = await AsyncStorage.getItem('cart');
-    //     let cart = cartJson ? JSON.parse(cartJson) : [];
-    //
-    //     // Vérifier si le produit est déjà dans le panier
-    //     const index = cart.findIndex((item) => item.id === product.id);
-    //
-    //     if (index !== -1) {
-    //         // Si le produit est déjà dans le panier, augmentez la quantité
-    //         cart[index].quantite += product.quantity;
-    //     } else {
-    //         // Sinon, ajoutez le nouveau produit au panier
-    //         cart.push({
-    //             id: product.id,
-    //             nom: product.designation,
-    //             prix: (product.prix_unitaire_HT * 0.2 + product.prix_unitaire_HT).toFixed(2), // Inclut la TVA
-    //             quantite: product.quantity,
-    //             image: product.url_image
-    //         });
-    //     }
-    //
-    //     // Sauvegarder le panier mis à jour
-    //     await AsyncStorage.setItem('cart', JSON.stringify(cart));
-    //
-    //     // Fermer la modale
-    //     setModalVisible(false);
-    // };
-
-
-
-    // const handleAddToCartFromModal = (product) => {
-    //     console.log("Ajout au panier depuis la modal :", product);
-    //     console.log("Description du produit :", selectedProduct.description);
-    //
-    //
-    //     setModalVisible(false);
-    // };
-    // const handleAddToCartFromModal = async (product) => {
-    //     // Récupérer le panier actuel
-    //     const cartJson = await AsyncStorage.getItem('cart');
-    //     let cart = cartJson ? JSON.parse(cartJson) : [];
-    //
-    //     // Vérifier si le produit est déjà dans le panier
-    //     // Utilisez product.reference au lieu de product.id
-    //     const index = cart.findIndex((item) => item.id === product.reference);
-    //
-    //     if (index !== -1) {
-    //         // Si le produit est déjà dans le panier, augmentez la quantité
-    //         cart[index].quantite += 1; // ou += product.quantite; si vous gérez la quantité dans Produits.js
-    //     } else {
-    //         // Sinon, ajoutez le nouveau produit au panier avec 'reference' comme 'id'
-    //         cart.push({
-    //             id: product.reference.toString(), // Utilisez 'reference' comme identifiant unique
-    //             nom: product.designation, // Assurez-vous d'utiliser les bons champs
-    //             prix: parseFloat((product.prix_unitaire_HT * 1.2).toFixed(2)), // Ajoutez 20% de TVA
-    //             quantite: 1, // ou product.quantite; si vous gérez la quantité dans Produits.js
-    //             image: product.url_image
-    //         });
-    //     }
-    //
-    //     // Sauvegarder le panier mis à jour
-    //     await AsyncStorage.setItem('cart', JSON.stringify(cart));
-    //
-    //     // Fermer la modale et potentiellement notifier l'utilisateur
-    //     setModalVisible(false);
-    //     // Ajouter ici un feedback pour l'utilisateur (ex. un message toast)
-    // };
 
     const handleAddToCartFromModal = async (product) => {
         const cartJson = await AsyncStorage.getItem('cart');
         let cart = cartJson ? JSON.parse(cartJson) : [];
 
-        const productIndex = cart.findIndex((item) => item.id === product.id || item.reference === product.reference);
+        const productIndex = cart.findIndex((item) => item.reference === product.reference );
 
         if (productIndex !== -1) {
-            cart[productIndex].quantite += 1;
-            cart[productIndex].prix = parseFloat(cart[productIndex].prix) * cart[productIndex].quantite;
+            cart[productIndex].quantity += 1;
+            cart[productIndex].prix = parseFloat(cart[productIndex].prix) * cart[productIndex].quantity;
         } else {
             cart.push({
-                id: product.id || product.reference,
+                id: product.reference,
                 nom: product.nom || product.designation,
                 prix: parseFloat(product.prix_unitaire_HT * 1.2).toFixed(2),
                 quantite: product.quantity,
                 image: product.url_image
             });
+            console.log(product.reference);
         }
 
         await AsyncStorage.setItem('cart', JSON.stringify(cart));
