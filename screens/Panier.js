@@ -22,16 +22,28 @@ import {styles} from "../styles/PanierStyles";
 const Panier = () => {
     const [articlesPanier, setArticlesPanier] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
+    const [confirmDeleteModalVisible, setConfirmDeleteModalVisible] = useState(false);
+    const [productToDeleteId, setProductToDeleteId] = useState(null);
     const [selectedProduct, setSelectedProduct] = useState(null);
 
 
-    const ajusterQuantite = (id, delta) => {
-        setArticlesPanier(articlesPanier.map(article => {
+    const ajusterQuantite = async (id, delta) => {
+        const updatedArticlesPanier = articlesPanier.map(article => {
             if (article.id === id) {
                 return { ...article, quantite: Math.max(1, article.quantite + delta) };
             }
             return article;
-        }));
+        });
+
+        setArticlesPanier(updatedArticlesPanier);
+
+        // Mise à jour AsyncStorage avec les nouvelles quantités
+        await AsyncStorage.setItem('cart', JSON.stringify(updatedArticlesPanier));
+    };
+
+    const openConfirmDeleteModal = (id) => {
+        setProductToDeleteId(id);
+        setConfirmDeleteModalVisible(true);
     };
 
     const supprimerArticleDuPanier = async (idArticleASupprimer) => {
@@ -53,7 +65,8 @@ const Panier = () => {
     };
 
 
-    const totalPanier = articlesPanier.reduce((total, article) => total + article.prix * article.quantite, 0).toFixed(2);
+    //const totalPanier = articlesPanier.reduce((total, article) => total + article.prix * article.quantite, 0).toFixed(2);
+    const totalPanier = articlesPanier.reduce((total, article) => total + (parseFloat(article.prixHT) * article.quantite), 0).toFixed(2);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -68,14 +81,11 @@ const Panier = () => {
     );
 
     const openModal = (product) => {
-
-        if (!product.quantity) {
-            product.quantity = 1;
-        }
-
-        setSelectedProduct({ ...product, inputQuantity: product.quantity.toString() });
+        setSelectedProduct(product);
         setModalVisible(true);
+        console.log(product);
     };
+
 
     return (
         <View style={styles.container}>
@@ -105,11 +115,11 @@ const Panier = () => {
                                         <TouchableOpacity onPress={() => ajusterQuantite(item.id, 1)}>
                                             <MaterialIcons name="add" size={24} color="#333" />
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={styles.iconTrash} onPress={() => supprimerArticleDuPanier(item.id)}>
+                                        <TouchableOpacity style={styles.iconTrash} onPress={() => openConfirmDeleteModal(item.id)}>
                                             <Entypo name="trash" size={24} color="#9E2B40" />
                                         </TouchableOpacity>
                                     </View>
-                                    <Text style={styles.articlePrix}>{`${(parseFloat(item.prix)).toFixed(2)} €`}</Text>
+                                    <Text style={styles.articlePrix}>{`${(parseFloat(item.prixHT) * item.quantite).toFixed(2)} €`}</Text>
 
                                 </View>
                             </View>
@@ -135,27 +145,57 @@ const Panier = () => {
 
             <Modal
                 animationType="slide"
+                transparent={true}
+                visible={confirmDeleteModalVisible}
+                onRequestClose={() => setConfirmDeleteModalVisible(!confirmDeleteModalVisible)}
+            >
+                <View style={stylesProduits.centeredView2}>
+                    <View style={stylesProduits.modalView2}>
+                        <Text style={stylesProduits.textStyle2}>Êtes-vous sûr de vouloir supprimer cet article du panier ?</Text>
+                        <Pressable
+                            style={[stylesProduits.button3]}
+                            onPress={() => {
+                                supprimerArticleDuPanier(productToDeleteId);
+                                setConfirmDeleteModalVisible(!confirmDeleteModalVisible);
+                            }}
+                        >
+                            <Text style={stylesProduits.textStyle}>Supprimer</Text>
+                        </Pressable>
+                        <Pressable
+                            style={[stylesProduits.button2]}
+                            onPress={() => setConfirmDeleteModalVisible(!confirmDeleteModalVisible)}
+                        >
+                            <Text style={stylesProduits.textStyle}>Annuler</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
+
+
+            <Modal
+                animationType="slide"
                 transparent={false}
                 visible={modalVisible}
-                onRequestClose={() => setModalVisible(!modalVisible)}>
+                onRequestClose={() => setModalVisible(!modalVisible)}
+            >
                 <ScrollView style={stylesProduits.fullScreenModal}>
                     {selectedProduct && (
                         <>
-                            <Image source={{ uri: selectedProduct.url_image }} style={stylesProduits.fullSizeImage} />
+                            <Image source={{ uri: selectedProduct.image}} style={stylesProduits.fullSizeImage} />
                             <View style={stylesProduits.modalContent}>
-                                <Text style={stylesProduits.modalProductName}>{selectedProduct.designation}</Text>
+                                <Text style={stylesProduits.modalProductName}>{selectedProduct.nom}</Text>
                                 <Text style={stylesProduits.modalProductDescription}>{selectedProduct.description}</Text>
                                 <Text style={stylesProduits.modalProductPrice}>
-                                    Prix: {((selectedProduct.prix_unitaire_HT * 0.2 + selectedProduct.prix_unitaire_HT)).toFixed(2)}€
+                                    Prix HT: {selectedProduct.prixHT.toFixed(2)}€
                                 </Text>
-
                             </View>
                         </>
                     )}
                 </ScrollView>
                 <TouchableOpacity
                     style={stylesProduits.closeButton}
-                    onPress={() => setModalVisible(false)}>
+                    onPress={() => setModalVisible(false)}
+                >
                     <Text style={stylesProduits.closeButtonText}>X</Text>
                 </TouchableOpacity>
             </Modal>

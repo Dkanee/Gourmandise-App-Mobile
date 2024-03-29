@@ -16,6 +16,7 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 const CustomDrawer = (props) => {
     return (
         <View style={{flex: 1}}>
+
             <DrawerContentScrollView
                 {...props}
                 contentContainerStyle={{backgroundColor: "#6C534E"}}

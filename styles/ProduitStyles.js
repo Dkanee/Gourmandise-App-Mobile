@@ -147,11 +147,49 @@ export const stylesProduits = StyleSheet.create({
   buttonText: {
     color: 'white',
   },
+
+  centeredView2: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView2: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+
+
   button: {
     backgroundColor: "#582900",
     padding: 10,
     borderRadius: 5,
   },
+
+  button2: {
+    backgroundColor: "#660000",
+    padding: 10,
+    borderRadius: 5,
+  },
+
+  button3: {
+    backgroundColor: "#BF3030",
+    padding: 10,
+    borderRadius: 5,
+    marginBottom:5,
+  },
+
   buttonDisabled: {
     backgroundColor: "#aaa",
   },
@@ -180,13 +218,28 @@ export const stylesProduits = StyleSheet.create({
   buttonClose: {
     backgroundColor: '#2196F3',
   },
+  buttonClose2: {
+    backgroundColor: '#582900',
+  },
   textStyle: {
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
+    fontSize: 15,
   },
+
+  textStyle2: {
+    color: 'black',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 15,
+    fontSize: 16,
+
+  },
+
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
+
   },
 });

@@ -167,8 +167,11 @@ export default function Produits({ navigation,route }) {
                 nom: product.nom || product.designation,
                 prix: parseFloat(product.prix_unitaire_HT * 1.2 * (product.quantity || 1)).toFixed(2), // Calculez le prix en ajoutant 20% de TVA.
                 quantite: product.quantity || 1,
-                image: product.url_image
+                description: product.description,
+                image: product.url_image,
+                prixHT:product.prix_unitaire_HT,
             });
+            console.log(product)
         }
 
         await AsyncStorage.setItem('cart', JSON.stringify(cart));

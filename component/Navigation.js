@@ -47,7 +47,7 @@ export default function navigation() {
                     options={() => ({
                         header: (props) => <Navbar {...props} title="Accueil"></Navbar>,
                         drawerIcon: (color) => (
-                            <Ionicons name="home-outline" size={22} color={'#582900'} />
+                            <Entypo name="home" size={22} color={'#582900'} />
                         ),
                     })}
                 />
@@ -59,7 +59,7 @@ export default function navigation() {
                         options={() => ({
                             header: (props) => <Navbar {...props} title="Login"></Navbar>,
                             drawerIcon: (color) => (
-                                <AntDesign name="login" size={22} color={'#582900'} />
+                                <Entypo name="home" size={22} color={'#582900'} />
                             ),
                         })}
                     />
@@ -70,7 +70,7 @@ export default function navigation() {
                         options={() => ({
                             header: (props) => <Navbar {...props} title="Logout"></Navbar>,
                             drawerIcon: (color) => (
-                                <Ionicons name="log-out-outline" size={22} color={'#582900'} />
+                                <Entypo name="log-out" size={22} color={'#582900'} />
                             ),
                         })}
                     />
