@@ -7,10 +7,9 @@ CREATION DE COMPTE DIVISER EN PLUSIEURS PARTIES TROP DE CHAMPS
 ABONNEZ-VOUS avec 3 logos liens de nos "réseaux".
 ()
 
-BUG quand on se déconnecte on peut toujours avoir accès à l'onglet profil
+BUG quand on se déconnecte, on peut toujours avoir accès à l'onglet profil
 
 CODE REDUC PANIER
 
-TRUC WESTERN QUAND LE PANIER EST VIDE
 
-LOGO SUPPRIMER DU PANIER et confirmation vous etes surs de vouloir supprimer ?
+

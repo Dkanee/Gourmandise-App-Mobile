@@ -20,7 +20,7 @@ import Panier from "../screens/Panier";
 const Drawer = createDrawerNavigator();
 
 export default function navigation() {
-    const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+    const { isLoggedIn, setIsLoggedIn,logout } = useContext(AuthContext);
     console.log(isLoggedIn);
 
 
@@ -54,28 +54,51 @@ export default function navigation() {
 
                 {!isLoggedIn ? (
                     <Drawer.Screen
-                        name="Login"
+                        name="Se connecter"
                         component={Login}
                         options={() => ({
-                            header: (props) => <Navbar {...props} title="Login"></Navbar>,
+                            header: (props) => <Navbar {...props} title="Se connecter"></Navbar>,
                             drawerIcon: (color) => (
-                                <Entypo name="home" size={22} color={'#582900'} />
+                                <Entypo name="login" size={22} color={'#582900'} />
                             ),
                         })}
                     />
                 ) : (
                     <Drawer.Screen
                         name="Deconnexion"
-                        component={Login}
-                        options={() => ({
-                            header: (props) => <Navbar {...props} title="Logout"></Navbar>,
-                            drawerIcon: (color) => (
-                                <Entypo name="log-out" size={22} color={'#582900'} />
-                            ),
+                        listeners={({ navigation }) => ({
+                            focus: () => logout(navigation), // Déclenche la déconnexion lorsque l'utilisateur navigue vers ce Drawer.Screen
                         })}
+                        component={Login} // Il est possible que vous souhaitiez avoir un composant vide ou une redirection automatique ici, car le listener s'occupera de la déconnexion
+                        options={{
+                            header: (props) => <Navbar {...props} title="Se connecter"></Navbar>,
+                            drawerLabel: 'Déconnexion',
+                            drawerIcon: ({ color }) => <Entypo name="log-out" size={22} color={color} />,
+                            // Gérer la déconnexion lors du clic
+                            listeners: {
+                                press: (e) => {
+                                    e.preventDefault(); // Empêcher la navigation
+                                    logout(); // Déclencher la fonction de déconnexion
+                                },
+                            },
+                        }}
                     />
-
                 )}
+                {!isLoggedIn &&  (
+                    <Drawer.Screen
+                        name="Créer compte"
+                        component={Createacc}
+                        options={() => ({
+                            header: (props) => <Navbar {...props} title="Création de compte"></Navbar>,
+                            drawerIcon: (color) => (
+                                <Entypo name="user" size={22} color={'#582900'} />
+                            ),
+
+                        })}
+
+                    />
+                )}
+
                 <Drawer.Screen
                     name="Produits"
                     component={Produits}
@@ -87,6 +110,7 @@ export default function navigation() {
                     })}
                 />
 
+
                 <Drawer.Screen
                     name="Panier"
                     component={Panier}
@@ -97,7 +121,7 @@ export default function navigation() {
                         ),
                     })}
                 />
-                {isLoggedIn ? (
+                {isLoggedIn &&  (
                 <Drawer.Screen
                     name="Profil"
                     component={Profil}
@@ -108,17 +132,15 @@ export default function navigation() {
                         ),
 
                     })}
-                />
-                ) : (
 
-                <Drawer.Screen
-                    name="Createacc"
-                    component={Createacc}
-                    options={{
-                        headerShown: false,
-                        drawerLabel: () => null,
-                    }}
-                />)}
+                />
+                    )}
+
+
+
+
+
+
 
             </Drawer.Navigator>
         </NavigationContainer>
