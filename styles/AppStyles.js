@@ -10,6 +10,12 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 21,
+  }, container1: {
+    flex: 1,
+    paddingLeft : 50,
+    // justifyContent: "center",
+    // alignItems: "center",
+    //padding: 21,
   },
   logo: {
     width: 130,

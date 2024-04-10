@@ -14,6 +14,7 @@ import navigation from "../component/Navigation";
 import Toast from "react-native-toast-message";
 import { useNavigation } from '@react-navigation/native';
 
+
 const { width, height } = Dimensions.get("window"); // Obtenirr les dimensions de l'écran
 
 export default function LoginScreen({ title }) {
@@ -74,10 +75,6 @@ export default function LoginScreen({ title }) {
     // Gestion du "Mot de passe oublié"
   };
 
-  const handleCreateAccount = () => {
-    // Gestion de la création de compte
-  };
-
   return (
     <View style={styles.container}>
       <Image
@@ -114,7 +111,7 @@ export default function LoginScreen({ title }) {
         style={styles.btn}
         title="Créer un compte"
         onPress={() => {
-          navigation.navigate("Createacc");
+          navigation.navigate("Créer compte");
         }}
         buttonStyle={styles.loginButton}
       />

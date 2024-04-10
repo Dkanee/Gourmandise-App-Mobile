@@ -68,6 +68,7 @@ export default function Createacc({ navigation }) {
     };
 
     return (
+
         <SafeAreaView style={styles.container}>
             <Image source={{ uri: "https://i.ibb.co/Q9Pjm80/logo.png" }} style={styles.logo1} />
 
@@ -78,20 +79,19 @@ export default function Createacc({ navigation }) {
             <TextInput style={styles.input} value={adresse} onChangeText={setAdresse} placeholder="Entrez votre adresse" placeholderTextColor="white" />
 
             <Text style={[styles.label, { color: "black" }]}>Code Postal:</Text>
-            <TextInput style={styles.input} value={cp} onChangeText={setCp} placeholder="Entrez votre code postal" placeholderTextColor="white" />
+            <TextInput style={styles.input} keyboardType={"number-pad"} value={cp} onChangeText={setCp} placeholder="Entrez votre code postal" placeholderTextColor="white" />
 
             <Text style={[styles.label, { color: "black" }]}>Ville:</Text>
             <TextInput style={styles.input} value={ville} onChangeText={setVille} placeholder="Entrez votre ville" placeholderTextColor="white" />
 
             <Text style={[styles.label, { color: "black" }]}>Téléphone:</Text>
-            <TextInput style={styles.input} value={telephone} onChangeText={setTelephone} placeholder="Entrez votre n° de téléphone" placeholderTextColor="white" />
+            <TextInput style={styles.input} keyboardType={"phone-pad"} value={telephone} onChangeText={setTelephone} placeholder="Entrez votre n° de téléphone" placeholderTextColor="white" />
 
             <Text style={[styles.label, { color: "black" }]}>Email:</Text>
-            <TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="Entrez votre email" placeholderTextColor="white" />
+            <TextInput style={styles.input} keyboardType={"email-address"} value={email} onChangeText={setEmail} placeholder="Entrez votre email" placeholderTextColor="white" />
 
             <Text style={[styles.label, { color: "black" }]}>Mot de passe:</Text>
             <TextInput style={styles.input} value={motdepasse} onChangeText={setPassword} placeholder="Entrez votre mot de passe" secureTextEntry placeholderTextColor="white" />
-
 
 
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>

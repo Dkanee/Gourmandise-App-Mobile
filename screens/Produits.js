@@ -17,8 +17,6 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-
-
 export default function Produits({ navigation,route }) {
     const [data, setData] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);

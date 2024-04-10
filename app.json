@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "16596b32-4a06-4d07-ab41-ebff08d97812"
+      }
+    },
+    "android": {
+      "package": "com.dkanee.gourmandise"
+    }
+  }
+}

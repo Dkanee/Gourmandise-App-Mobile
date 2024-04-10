@@ -21,7 +21,7 @@ export default function Home({navigation}) {
             <View style={styles.searchContainer}>
                 <TextInput
                     style={styles.searchInput}
-                    placeholder="Rechercher..."s
+                    placeholder="Rechercher..."
                     placeholderTextColor="white"
                     //onPressIn={()=> {}}
                 />
