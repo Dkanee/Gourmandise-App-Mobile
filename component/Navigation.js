@@ -1,24 +1,20 @@
-import React, { Component, useContext } from "react";
+import React, { useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import Home from "../screens/Home";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { Header } from "react-native/Libraries/NewAppScreen";
 import CustomDrawer from "./CustomDrawer";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import Navbar from "../component/Navbar";
-import { Text, View, TouchableOpacity } from "react-native";
 import Login from "../screens/LoginScreen";
 import { AuthContext } from "../middleware/AuthContext";
 import Createacc from "../screens/Createacc";
 import Produits from "../screens/Produits";
-import {AntDesign, Entypo} from "@expo/vector-icons";
+import { Entypo} from "@expo/vector-icons";
 import Profil from "../screens/Profil";
 import Panier from "../screens/Panier";
 const Drawer = createDrawerNavigator();
 
 export default function navigation() {
-    const { isLoggedIn, setIsLoggedIn,logout } = useContext(AuthContext);
+    const { isLoggedIn, logout } = useContext(AuthContext);
     console.log(isLoggedIn);
 
 

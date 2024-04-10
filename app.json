@@ -1,12 +1,37 @@
 {
   "expo": {
+    "name": "gourmandise",
+    "slug": "gourmandise",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "*/"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logo.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.dkanee.gourmandise"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
     "extra": {
       "eas": {
         "projectId": "16596b32-4a06-4d07-ab41-ebff08d97812"
       }
-    },
-    "android": {
-      "package": "com.dkanee.gourmandise"
     }
   }
 }
+

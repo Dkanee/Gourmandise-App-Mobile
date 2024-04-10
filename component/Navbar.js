@@ -8,9 +8,6 @@ export default function Navbar({ title, navigation, route }) {
 
         <View style={styles.containerNav}>
 
-            {/*<TouchableOpacity onPress={() => navigation.navigate("Login")}>*/}
-            {/*    <Entypo name="user" size={24} color="white" />*/}
-            {/*</TouchableOpacity>*/}
 
             {route.name !== "Produits" && route.name === "Accueil" && route.name !== "Profil" && route.name !== "Panier"  ? (
                 <TouchableOpacity onPress={() => navigation.navigate("Se connecter")}>

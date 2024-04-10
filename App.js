@@ -3,15 +3,9 @@ import {useFonts} from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import {useCallback} from "react";
 import { View, Text, StyleSheet } from "react-native";
-import LoginScreen from "./screens/LoginScreen.js";
-import Createacc from "./screens/Createacc";
-import Home from "./screens/Home";
 import Navigation from "./component/Navigation";
-import { NavigationContainer } from "@react-navigation/native";
-import { AuthProvider, AuthContext } from "./middleware/AuthContext";
-import Produits from "./screens/Produits";
-import Profil from "./screens/Profil"
-import Panier from "./screens/Panier"
+import { AuthProvider } from "./middleware/AuthContext";
+
 
 export default function App() {
     const[fontsLoaded] = useFonts({

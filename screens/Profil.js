@@ -9,7 +9,6 @@ import {
 import React, {useContext, useState} from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SIZES } from "../assets/constants/constants";
-import { StatusBar } from "expo-status-bar";
 import { MaterialIcons } from "@expo/vector-icons";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import { AuthContext } from "../middleware/AuthContext";
@@ -283,7 +282,6 @@ const Profil = () => {
                     navigationState={{ index, routes }}
                     renderScene={renderScene}
                     onIndexChange={setIndex}
-                    //initialLayout={{ width: layout.width }}
                     renderTabBar={renderTabBar}
                 />
             </View>
