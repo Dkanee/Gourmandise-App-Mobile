@@ -10,7 +10,6 @@ import {
 import { Button } from "react-native-elements";
 import { styles } from "../styles/AppStyles";
 import { AuthContext } from "../middleware/AuthContext";
-import navigation from "../component/Navigation";
 import Toast from "react-native-toast-message";
 import { useNavigation } from '@react-navigation/native';
 

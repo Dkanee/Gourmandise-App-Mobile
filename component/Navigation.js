@@ -1,5 +1,3 @@
-// @ts-ignore
-
 import React, { Component, useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import Home from "../screens/Home";
@@ -73,7 +71,7 @@ export default function navigation() {
                         options={{
                             header: (props) => <Navbar {...props} title="Se connecter"></Navbar>,
                             drawerLabel: 'Déconnexion',
-                            drawerIcon: ({ color }) => <Entypo name="log-out" size={22} color={color} />,
+                            drawerIcon: ({ color }) => <Entypo name="log-out" size={22} color={'#582900'} />,
                             // Gérer la déconnexion lors du clic
                             listeners: {
                                 press: (e) => {
