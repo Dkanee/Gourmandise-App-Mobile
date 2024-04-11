@@ -8,9 +8,13 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
-    padding: 21,
-  }, container1: {
+    alignItems: "row",
+    padding: 47,
+  },
+
+
+
+  container1: {
     flex: 1,
     paddingLeft : 50,
     // justifyContent: "center",
@@ -20,31 +24,37 @@ export const styles = StyleSheet.create({
   logo: {
     width: 130,
     height: 130,
-    marginBottom: 2,
+    marginTop: 90,
+    alignItems: "center",
+    marginLeft:80,
+    marginBottom: 10,
+
+
 
   },
 
   logo1: {
-    width: 120,
-    height: 110,
-    marginBottom: 2,
-    marginTop:45,
+
+    justifyContent: "center",
+    alignItems:"center",
   },
   label: {
     fontSize: 16,
     marginBottom: 5,
     color: "#333",
+    textAlign:'left',
+
   },
   input: {
     height: 40,
-    borderColor: "#ccc",
+    borderColor: "#000000",
     borderWidth: 1,
-    borderRadius: 20, // Essayez une valeur plus grande
+    borderRadius: 8, // Essayez une valeur plus grande
     marginBottom: 15,
     paddingHorizontal: 10,
     width: 300,
-    backgroundColor: "#8A6642",
-    color: "#FFFFFF",
+    backgroundColor: "white",
+    color: "black",
   },
 
   forgotPassword: {
@@ -56,6 +66,10 @@ export const styles = StyleSheet.create({
   loginButton: {
     backgroundColor: "#7B3F00",
     marginBottom: 20,
+  },
+  loginButton1: {
+    backgroundColor: "#aabbff",
+    padding:100,
   },
   createAcc: {
     backgroundColor: "#7B3F00",

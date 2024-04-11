@@ -1,17 +1,21 @@
 import React, { useState, useContext } from "react";
 import {
-  View,
-  Text,
-  TextInput,
-  Image,
-  ImageBackground,
-  Dimensions,
+    View,
+    Text,
+    TextInput,
+    Image,
+    ImageBackground,
+    Dimensions, TouchableOpacity, Modal,
 } from "react-native";
 import { Button } from "react-native-elements";
 import { styles } from "../styles/AppStyles";
+import { localStyles} from "../styles/localStyles";
+
 import { AuthContext } from "../middleware/AuthContext";
 import Toast from "react-native-toast-message";
 import { useNavigation } from '@react-navigation/native';
+import {Entypo} from "@expo/vector-icons";
+
 
 
 const { width, height } = Dimensions.get("window"); // Obtenirr les dimensions de l'écran
@@ -21,8 +25,26 @@ export default function LoginScreen({ title }) {
   const [email, setEmail] = useState("");
   const [motdepasse, setPassword] = useState("");
   const { login } = useContext(AuthContext);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+    const [focusedField, setFocusedField] = useState(null);
+    const [emailError, setEmailError] = useState(""); // Ajouté pour gérer les erreurs d'email
+    const [passwordError, setPasswordError] = useState(""); // Nouvel état pour les erreurs de mot de passe
+    const [modalVisible, setModalVisible] = useState(false); // État pour la visibilité de la modale
+
+    const validateEmail = (email) => {
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\\.,;:\s@"]+\.)+[^<>()[\]\\.,;:\s@"]{2,})$/i;
+        return re.test(String(email).toLowerCase());
+    }
+
 
     const handleLogin = async () => {
+        if (!validateEmail(email)) {
+            // Si l'email n'est pas valide, affiche un message d'erreur et ne continue pas
+            setEmailError("Veuillez entrer une adresse email valide.");
+            return;
+        }
+
+        setEmailError(""); // Réinitialiser l'erreur d'email s'il n'y en a pas
         try {
             const response = await fetch(
                 "https://gourmandise.mgueye-ba.v70208.campus-centre.fr/api/login",
@@ -39,13 +61,20 @@ export default function LoginScreen({ title }) {
                 }
             );
 
-            if (response.ok) {
-                const data = await response.json();
-                if (data && data.success) {
-                    // Ici, vous devez passer le token et les informations de l'utilisateur à la fonction login
-                    login(data.token, data.user); // Assurez-vous que l'API renvoie un objet `user` avec les infos nécessaires
-                    navigation.navigate("Accueil");
-                    console.log(data.token, data.user);
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                setModalVisible(true);
+                setTimeout(() => {
+                    setModalVisible(false);
+                    login(data.token, data.user);
+                    navigation.navigate('Accueil');
+                }, 2000);
+
+            } else {
+                // Utilisez `passwordError` pour afficher un message d'erreur spécifique lié au mot de passe
+                if (data.message.includes("mot de passe incorrect")) { // Adaptez cette condition selon le message d'erreur exact de votre API
+                    setPasswordError("L'adresse mail ou le mdp ne sont pas corrects.");
                 } else {
                     Toast.show({
                         type: 'error',
@@ -53,12 +82,6 @@ export default function LoginScreen({ title }) {
                         text2: data.message || "Une erreur s'est produite.",
                     });
                 }
-            } else {
-                Toast.show({
-                    type: 'error',
-                    text1: 'Erreur de connexion',
-                    text2: `Erreur HTTP: ${response.status}`,
-                });
             }
         } catch (error) {
             console.error("Erreur lors de la connexion :", error);
@@ -82,22 +105,36 @@ export default function LoginScreen({ title }) {
       />
       <Text style={[styles.label, { color: "black" }]}>Email:</Text>
       <TextInput
-        style={styles.input}
+          style={[styles.input, focusedField === 'email' ? localStyles.focusedInput : {}]}
+          onFocus={() => setFocusedField('email')}
+          onBlur={() => setFocusedField(null)}
         value={email}
         onChangeText={setEmail}
         placeholder="Entrez votre email"
-        placeholderTextColor="white"
+        placeholderTextColor="grey"
       />
-      <Text style={[styles.label, { color: "black" }]}>Mot de passe:</Text>
-      <TextInput
-        style={styles.input}
-        value={motdepasse}
-        onChangeText={setPassword}
-        placeholder="Entrez votre mot de passe"
-        secureTextEntry
-        placeholderTextColor="white"
-      />
-      <Text style={styles.forgotPassword} onPress={handleForgotPassword}>
+        <View style={localStyles.passwordContainer}>
+            <TextInput
+                style={[styles.input, focusedField === 'motdepasse' ? localStyles.focusedInput : {}]}
+                onFocus={() => setFocusedField('motdepasse')}
+                onBlur={() => setFocusedField(null)}
+                value={motdepasse}
+                onChangeText={setPassword}
+                placeholder="Entrez votre mot de passe"
+                secureTextEntry={!passwordVisible}
+                placeholderTextColor="grey"
+            />
+
+            <TouchableOpacity
+                onPress={() => setPasswordVisible(!passwordVisible)}
+                style={localStyles.visibilityToggle}
+            >
+                <Entypo styles name={passwordVisible ? "eye" : "eye-with-line"} size={24} color="grey" />
+            </TouchableOpacity>
+        </View>
+        {emailError ? <Text style={{ color: 'red' }}>{emailError}</Text> : null}
+        {passwordError ? <Text style={{ color: 'red' }}>{passwordError}</Text> : null}
+        <Text style={styles.forgotPassword} onPress={handleForgotPassword}>
         Mot de passe oublié ?
       </Text>
       <Button
@@ -114,6 +151,20 @@ export default function LoginScreen({ title }) {
         }}
         buttonStyle={styles.loginButton}
       />
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+                setModalVisible(!modalVisible);
+            }}
+        >
+            <View style={localStyles.centeredView}>
+                <View style={localStyles.modalView}>
+                    <Text style={localStyles.modalText}>Connexion effectuée avec succès</Text>
+                </View>
+            </View>
+        </Modal>
     </View>
   );
 }

@@ -247,7 +247,6 @@ const Profil = () => {
                             style={{
 
                                 color: COLORS.white,
-                                backgroundColor:'#781e1e'
                             }}
                         >
                             Modifier Profil
