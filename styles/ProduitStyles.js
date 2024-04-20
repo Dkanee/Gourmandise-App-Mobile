@@ -7,6 +7,14 @@ export const stylesProduits = StyleSheet.create({
     fontSize: 18,
 
   },
+
+  errorMessage: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20
+
+  },
+
   quantityInput: {
     borderWidth: 1,
     borderColor: 'grey',
@@ -198,6 +206,10 @@ export const stylesProduits = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 22,
+
+  },buttonSelected: {
+    backgroundColor:"green",
+
   },
   modalView: {
     margin: 20,
@@ -215,9 +227,31 @@ export const stylesProduits = StyleSheet.create({
     elevation: 5,
 
   },
-  buttonClose: {
-    backgroundColor: '#2196F3',
+
+  modalView1: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 50,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+
   },
+  buttonValidate: {
+    backgroundColor: 'green',
+  },
+
+  buttonClose: {
+    backgroundColor: "#BF3030",
+  },
+
   buttonClose2: {
     backgroundColor: '#582900',
   },
@@ -226,6 +260,7 @@ export const stylesProduits = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 15,
+
   },
 
   textStyle2: {
@@ -238,8 +273,10 @@ export const stylesProduits = StyleSheet.create({
   },
 
   modalText: {
+    fontSize: 15,
     marginBottom: 15,
     textAlign: 'center',
+    fontWeight: 'bold',
 
   },
 });

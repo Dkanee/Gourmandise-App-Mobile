@@ -13,8 +13,11 @@ import { localStyles} from "../styles/localStyles";
 
 import { AuthContext } from "../middleware/AuthContext";
 import Toast from "react-native-toast-message";
-import { useNavigation } from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {Entypo} from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useHistoryNavigation} from "../middleware/NavigationHistoryContext";
+
 
 
 
@@ -30,6 +33,13 @@ export default function LoginScreen({ title }) {
     const [emailError, setEmailError] = useState(""); // Ajouté pour gérer les erreurs d'email
     const [passwordError, setPasswordError] = useState(""); // Nouvel état pour les erreurs de mot de passe
     const [modalVisible, setModalVisible] = useState(false); // État pour la visibilité de la modale
+    const { addRouteToHistory } = useHistoryNavigation();
+
+    useFocusEffect(
+        React.useCallback(() => {
+            addRouteToHistory('Se connecter'); // Replace 'MyScreen' with the actual name of your screen
+        }, [])
+    );
 
     const validateEmail = (email) => {
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\\.,;:\s@"]+\.)+[^<>()[\]\\.,;:\s@"]{2,})$/i;
@@ -64,6 +74,10 @@ export default function LoginScreen({ title }) {
             const data = await response.json();
 
             if (response.ok && data.success) {
+                await AsyncStorage.setItem('userEmail', email); // Stockez l'email de l'utilisateur
+                await AsyncStorage.setItem('userToken', data.token);
+                await AsyncStorage.setItem('userCodec', JSON.stringify(data.user.codec));
+
                 setModalVisible(true);
                 setTimeout(() => {
                     setModalVisible(false);

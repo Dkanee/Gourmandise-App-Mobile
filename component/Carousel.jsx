@@ -1,38 +1,3 @@
-// import {StyleSheet, Text, View} from 'react-native'
-// import React from "react";
-// import { SliderBox } from "react-native-image-slider-box";
-// import {COLORS} from '../assets/constants/constants';
-//
-// const Carousel = () => {
-//     const slides = [
-//         "https://images.pexels.com/photos/9816187/pexels-photo-9816187.jpeg?auto=compress&cs=tinysrgb&w=600",
-//         "https://images.pexels.com/photos/205961/pexels-photo-205961.jpeg?auto=compress&cs=tinysrgb&w=600",
-//         "https://images.pexels.com/photos/587741/pexels-photo-587741.jpeg?auto=compress&cs=tinysrgb&w=600",
-//     ]
-//     return(
-//         <View style={styles.carouselContainer}>
-//             <SliderBox images={slides}
-//                        dotColor={COLORS.primary}
-//                        inactiveDotColor={COLORS.secondary}
-//                        ImageComponentStyle={{borderRadius:15, width:"95%", marginTop:15}}
-//                        autoplay
-//                        circleLoop
-//             />
-//         </View>
-//     )
-// }
-//
-// export default Carousel
-//
-// const styles = StyleSheet.create({
-//     carouselContainer:{
-//         flex:1,
-//         alignItems: "center"
-//     }
-// })
-//
-//
-//
 import React, { useState, useEffect, useRef } from 'react';
 import { View, FlatList, Dimensions, Image, StyleSheet } from 'react-native';
 

@@ -5,6 +5,8 @@ import {useCallback} from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Navigation from "./component/Navigation";
 import { AuthProvider } from "./middleware/AuthContext";
+import {NavigationHistoryProvider} from "./middleware/NavigationHistoryContext";
+import { NavigationContainer } from '@react-navigation/native';
 
 
 export default function App() {
@@ -28,10 +30,13 @@ export default function App() {
     }
 
   return (
-    <AuthProvider>
-      <View style={{ flex: 1 }}>
-        <Navigation/>
-      </View>
-    </AuthProvider>
+      <NavigationHistoryProvider>
+
+            <AuthProvider>
+                <View style={{ flex: 1 }}>
+                    <Navigation/>
+                </View>
+            </AuthProvider>
+      </NavigationHistoryProvider>
   );
 }

@@ -18,31 +18,30 @@ const CustomDrawer = (props) => {
                 contentContainerStyle={{backgroundColor: "#6C534E"}}
             >
                 <View style={{alignItems: "center"}}>
-                    <Text style={{marginBottom: -10, fontSize: 30, color: "#C7D3DD"}}>
-                        GOURMANDISE
-                    </Text>
+                    {/*<Text style={{marginBottom: -10, fontSize: 30, color: "#C7D3DD"}}>*/}
+                    {/*    GOURMANDISE*/}
+                    {/*</Text>*/}
                     <Image
-                        source={require("../assets/logo.png")}
+                        source={{uri: "https://cdn.pixabay.com/photo/2017/01/12/02/34/coffee-1973549_1280.jpg"}} // Remplacez par l'URL de votre image
                         style={{
-                            height: 100,
-                            width: 100,
-                            borderRadius: 40,
-                            marginBottom: -8,
+                            height: 250, // Ajustez selon vos besoins
+                            width: 300, // Ajustez selon vos besoins
+                            // marginBottom: 10,
                         }}
                     />
                 </View>
-                <View style={{marginBottom: 5}}>
-                    <View style={{alignItems: "center"}}>
-                        <Text style={{color: "#C7D3DD", fontSize: 20, marginBottom: 5}}>
-                            Nom client
-                        </Text>
-                    </View>
-                    <View style={{marginLeft: 5}}>
-                        <Text style={{color: "#C7D3DD", fontSize: 12}}>
-                            Adresse mail client
-                        </Text>
-                    </View>
-                </View>
+                {/*<View style={{marginBottom: 5}}>*/}
+                {/*    <View style={{alignItems: "center"}}>*/}
+                {/*        <Text style={{color: "#C7D3DD", fontSize: 20, marginBottom: 5}}>*/}
+                {/*            Nom client*/}
+                {/*        </Text>*/}
+                {/*    </View>*/}
+                {/*    <View style={{marginLeft: 5}}>*/}
+                {/*        <Text style={{color: "#C7D3DD", fontSize: 12}}>*/}
+                {/*            Adresse mail client*/}
+                {/*        </Text>*/}
+                {/*    </View>*/}
+                {/*</View>*/}
                 <View style={{flex: 1, backgroundColor: "#fff", paddingTop: 10}}>
                     <DrawerItemList {...props} />
                 </View>

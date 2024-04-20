@@ -21,6 +21,12 @@ export const styles = StyleSheet.create({
             paddingLeft:10,
 
         },
+
+    iconTrash2: {
+        position: 'absolute',
+        right: 25, // Ajustez la distance à droite
+        bottom: 30, // Ajustez la distance en bas
+    },
         card: {
             backgroundColor: '#fff',
             padding: 10,

@@ -11,11 +11,16 @@ import Produits from "../screens/Produits";
 import { Entypo} from "@expo/vector-icons";
 import Profil from "../screens/Profil";
 import Panier from "../screens/Panier";
+import RechercheProduits from "../screens/RechercheProduits";
+import HistoriqueC from "../screens/HistoriqueC";
+import CommandeDetailsScreen from "../screens/CommandeDetailsScreen";
 const Drawer = createDrawerNavigator();
 
 export default function navigation() {
     const { isLoggedIn, logout } = useContext(AuthContext);
     console.log(isLoggedIn);
+
+
 
 
     return (
@@ -131,9 +136,46 @@ export default function navigation() {
                     )}
 
 
+                    <Drawer.Screen
+                        name="RechercheProduits"
+                        component={RechercheProduits}
+                        options={() => ({
+                            header: (props) => <Navbar {...props} title="RechercheProduits"></Navbar>,
+                            drawerIcon: (color) => (
+                                <Entypo name="user" size={22} color={'#582900'} />
+                            ),
+                            drawerItemStyle: { display: 'none' },
 
+                        })}
 
+                    />
+                <Drawer.Screen
+                    name="Historique des commandes"
+                    component={HistoriqueC}
+                    options={() => ({
+                        header: (props) => <Navbar {...props} title="Historique des commandes"></Navbar>,
+                        drawerIcon: (color) => (
+                            <Entypo name="user" size={22} color={'#582900'} />
+                        ),
+                        drawerItemStyle: { display: 'none' },
 
+                    })}
+
+                />
+
+                <Drawer.Screen
+                    name="Détails de la commande"
+                    component={CommandeDetailsScreen}
+                    options={() => ({
+                        header: (props) => <Navbar {...props} title="Détails de la commande"></Navbar>,
+                        drawerIcon: (color) => (
+                            <Entypo name="user" size={22} color={'#582900'} />
+                        ),
+                        drawerItemStyle: { display: 'none' },
+
+                    })}
+
+                />
 
 
             </Drawer.Navigator>

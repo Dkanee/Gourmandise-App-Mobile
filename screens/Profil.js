@@ -11,7 +11,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SIZES } from "../assets/constants/constants";
 import { MaterialIcons } from "@expo/vector-icons";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import { AuthContext } from "../middleware/AuthContext";
+import { useHistoryNavigation } from '../middleware/NavigationHistoryContext'; // Importez le hook personnalisé
+
 
 
 const PhotosRoutes = () => (
@@ -47,38 +50,49 @@ const LikesRoutes = () => (
     />
 );
 
+
+
 const renderScene = SceneMap({
     1: PhotosRoutes,
     2: LikesRoutes,
 });
 
-const Profil = () => {
+const Profil = (route) => {
     const layout = useWindowDimensions();
     const [index, setIndex] = useState(0);
     const { userInfo } = useContext(AuthContext);
+    const navigation = useNavigation();
+    const { addRouteToHistory } = useHistoryNavigation();
+
+
+    useFocusEffect(
+        React.useCallback(() => {
+            addRouteToHistory('Profil');
+        }, [])
+    );
 
     const [routes] = useState([
-        { key: "1", title: "Dernières commandes" },
-        { key: "2", title: "Wishlist" },
+        // { key: "1", title: "Dernières commandes" },
     ]);
 
-    const renderTabBar = (props) => (
-        <TabBar
-            {...props}
-            indicatorStyle={{
-                backgroundColor: '#ffffff',
-            }}
-            style={{
-                backgroundColor: '#781e1e',
-                height: 60,
-            }}
-            renderLabel={({ focused, route }) => (
-                <Text style={{ color:"#ffffff",}}>
-                    {route.title}
-                </Text>
-            )}
-        />
-    );
+    // const renderTabBar = (props) => (
+        // <TabBar
+        //     {...props}
+        //     indicatorStyle={{
+        //         backgroundColor: '#ffffff',
+        //     }}
+        //     style={{
+        //         backgroundColor: '#781e1e',
+        //         height: 45,
+        //
+        //     }}
+        //     renderLabel={({ focused, route }) => (
+        //         <Text style={{ color:"#ffffff"}}>
+        //             {route.title}
+        //         </Text>
+        //     )}
+        // />
+
     return (
         <SafeAreaView
             style={{
@@ -101,7 +115,7 @@ const Profil = () => {
 
             <View style={{ flex: 1, alignItems: "center" }}>
                 <Image
-                    source={{uri: 'https://avatars.githubusercontent.com/u/86519238?v=4'}}
+                    source={{uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'}}
                     resizeMode="contain"
                     style={{
                         height: 155,
@@ -235,7 +249,7 @@ const Profil = () => {
                     <TouchableOpacity
                         style={{
                             width: 124,
-                            height: 36,
+                            height: 42,
                             alignItems: "center",
                             justifyContent: "center",
                             backgroundColor:'#781e1e',
@@ -253,16 +267,18 @@ const Profil = () => {
                         </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate('Historique des commandes')                }}
                         style={{
                             width: 124,
-                            height: 36,
+                            height: 42,
                             alignItems: "center",
                             justifyContent: "center",
                             backgroundColor:'#781e1e',
                             borderRadius: 10,
                             marginHorizontal: SIZES.padding * 2,
                         }}
+
                     >
                         <Text
                             style={{
@@ -270,20 +286,20 @@ const Profil = () => {
                                 color: COLORS.white,
                             }}
                         >
-                            on verra
+                            Dernières commandes
                         </Text>
                     </TouchableOpacity>
                 </View>
             </View>
 
-            <View style={{ flex: 1, marginHorizontal: 50, marginTop: 20 }}>
-                <TabView
-                    navigationState={{ index, routes }}
-                    renderScene={renderScene}
-                    onIndexChange={setIndex}
-                    renderTabBar={renderTabBar}
-                />
-            </View>
+            {/*<View style={{ flex: 1, marginHorizontal: 50, marginTop:30 }}>*/}
+            {/*    <TabView*/}
+            {/*        navigationState={{ index, routes }}*/}
+            {/*        renderScene={renderScene}*/}
+            {/*        onIndexChange={setIndex}*/}
+            {/*        // renderTabBar={renderTabBar}*/}
+            {/*    />*/}
+            {/*</View>*/}
         </SafeAreaView>
     );
 };

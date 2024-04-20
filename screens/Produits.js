@@ -15,6 +15,10 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {stylesProduits} from "../styles/ProduitStyles";
+import {useHistoryNavigation} from "../middleware/NavigationHistoryContext";
+import {useFocusEffect} from "@react-navigation/native";
+// import Home from "./Home.js";
 
 
 export default function Produits({ navigation,route }) {
@@ -24,6 +28,17 @@ export default function Produits({ navigation,route }) {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 11; // Fixe à 11 produits par page
     const [totalPages, setTotalPages] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const [orderConfirmationModalVisible, setOrderConfirmationModalVisible] = useState(false);
+    const { addRouteToHistory } = useHistoryNavigation();
+
+    useFocusEffect(
+        React.useCallback(() => {
+            addRouteToHistory('Produits'); // Replace 'MyScreen' with the actual name of your screen
+        }, [])
+    );
+
+
 
 
     useEffect(() => {
@@ -44,12 +59,22 @@ export default function Produits({ navigation,route }) {
     }, []);
 
 
+
+    useEffect(() => {
+        // Vérifie si `searchQuery` est passé en paramètre et le passe à `fetchData`
+        const searchQuery = route.params?.searchQuery;
+        fetchData(searchQuery);
+    }, [route.params?.searchQuery, currentPage]);
+
+
     const fetchData = async () => {
         const cachedData = await AsyncStorage.getItem(`data_page_${currentPage}`);
         if (cachedData) {
             setData(JSON.parse(cachedData));
         } else {
             try {
+                setIsLoading(true); // Commence le chargement
+
                 const response = await fetch(
                     `https://gourmandise.mgueye-ba.v70208.campus-centre.fr/api/products/paginated?page=${currentPage}&limit=${itemsPerPage}`,
                     {
@@ -117,41 +142,15 @@ export default function Produits({ navigation,route }) {
         setModalVisible(true);
     };
 
-
-    // const handleAddToCartFromModal = async (product) => {
-    //     const cartJson = await AsyncStorage.getItem('cart');
-    //     let cart = cartJson ? JSON.parse(cartJson) : [];
-    //
-    //     const productIndex = cart.findIndex((item) => item.reference === product.reference );
-    //
-    //     if (productIndex !== -1) {
-    //         cart[productIndex].quantity += 1;
-    //         cart[productIndex].prix = parseFloat(cart[productIndex].prix) * cart[productIndex].quantity;
-    //     } else {
-    //         cart.push({
-    //             id: product.reference,
-    //             nom: product.nom || product.designation,
-    //             prix: parseFloat(product.prix_unitaire_HT * 1.2).toFixed(2),
-    //             quantite: product.quantity,
-    //             image: product.url_image
-    //         });
-    //         console.log(product.reference);
-    //     }
-    //
-    //     await AsyncStorage.setItem('cart', JSON.stringify(cart));
-    //     setModalVisible(false);
-    // };
-
     const handleAddToCartFromModal = async (product) => {
         const cartJson = await AsyncStorage.getItem('cart');
         let cart = cartJson ? JSON.parse(cartJson) : [];
 
-        // Utilisez l'ID ou une autre propriété unique comme référence.
-        // Assurez-vous que la propriété utilisée ici est cohérente dans tout le panier.
+
         const productIndex = cart.findIndex((item) => item.id === (product.id || product.reference));
 
         if (productIndex !== -1) {
-            // Le produit existe déjà dans le panier, augmentez sa quantité.
+            // Le produit existe déjà dans le panier, augmenter donc sa sa quantité.
             const updatedQuantity = cart[productIndex].quantite + (product.quantity || 1); // Utilisez product.quantity ou 1 si non spécifié.
             cart[productIndex] = {
                 ...cart[productIndex],
@@ -159,7 +158,7 @@ export default function Produits({ navigation,route }) {
                 prix: parseFloat(cart[productIndex].prix) + (parseFloat(product.prix_unitaire_HT) * 1.2 * (product.quantity || 1)) // Mise à jour du prix total en conséquence.
             };
         } else {
-            // Le produit n'existe pas, ajoutez-le au panier.
+            // Si le produit n'existe pas, ajoutez-le au panier.
             cart.push({
                 id: product.id || product.reference,
                 nom: product.nom || product.designation,
@@ -169,12 +168,23 @@ export default function Produits({ navigation,route }) {
                 image: product.url_image,
                 prixHT:product.prix_unitaire_HT,
             });
-            console.log(product)
+            console.log(cart)
         }
 
         await AsyncStorage.setItem('cart', JSON.stringify(cart));
-        setModalVisible(false);
+        setTimeout(() => {
+            setOrderConfirmationModalVisible(false);
+        }, 4000);
+        setOrderConfirmationModalVisible(true); // Ouvrir la modale de confirmation
     };
+
+    useEffect(() => {
+        if (route.params?.selectedProduct) {
+
+            setSelectedProduct(route.params.selectedProduct);
+            setModalVisible(true);
+        }
+    }, [route.params?.selectedProduct]);
 
 
 
@@ -290,6 +300,25 @@ export default function Produits({ navigation,route }) {
                     <Text style={styles.closeButtonText}>X</Text>
                 </TouchableOpacity>
             </Modal>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={orderConfirmationModalVisible}
+                onRequestClose={() => setOrderConfirmationModalVisible(false)}
+            >
+                <View style={stylesProduits.centeredView}>
+                    <View style={stylesProduits.modalView}>
+                        <Text style={stylesProduits.modalText}>Votre produit a été ajouté au panier !</Text>
+                        <Pressable
+                            style={[stylesProduits.button, stylesProduits.buttonClose]}
+                            onPress={() => setOrderConfirmationModalVisible(false)}
+                        >
+                            <Text style={stylesProduits.textStyle}>Fermer</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
+
         </SafeAreaView>
 
     );
