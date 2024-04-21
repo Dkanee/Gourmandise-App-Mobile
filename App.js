@@ -6,8 +6,7 @@ import { View, Text, StyleSheet } from "react-native";
 import Navigation from "./component/Navigation";
 import { AuthProvider } from "./middleware/AuthContext";
 import {NavigationHistoryProvider} from "./middleware/NavigationHistoryContext";
-import { NavigationContainer } from '@react-navigation/native';
-
+import Toast from 'react-native-toast-message';
 
 export default function App() {
     const[fontsLoaded] = useFonts({
@@ -30,9 +29,12 @@ export default function App() {
     }
 
   return (
+
       <NavigationHistoryProvider>
 
+
             <AuthProvider>
+                {/*<Toast ref={(ref) => Toast.setRef(ref)} />*/}
                 <View style={{ flex: 1 }}>
                     <Navigation/>
                 </View>

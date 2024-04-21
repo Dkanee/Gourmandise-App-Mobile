@@ -1,8 +1,19 @@
 import React from 'react';
 import { View, Text, Image, FlatList, StyleSheet, SafeAreaView } from 'react-native';
+import {useHistoryNavigation} from "../middleware/NavigationHistoryContext";
+import {useFocusEffect} from "@react-navigation/native";
+// import Navigation from "../component/Navigation";
 
 const CommandeDetailsScreen = ({ route }) => {
     const { commande } = route.params;
+    const { addRouteToHistory } = useHistoryNavigation();
+
+    useFocusEffect(
+        React.useCallback(() => {
+            addRouteToHistory('Détails de la commande');
+        }, [])
+    );
+
 
     return (
         <SafeAreaView style={styles.container}>

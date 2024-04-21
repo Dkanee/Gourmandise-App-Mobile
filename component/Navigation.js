@@ -4,7 +4,6 @@ import Home from "../screens/Home";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawer from "./CustomDrawer";
 import Navbar from "../component/Navbar";
-import Login from "../screens/LoginScreen";
 import { AuthContext } from "../middleware/AuthContext";
 import Createacc from "../screens/Createacc";
 import Produits from "../screens/Produits";
@@ -14,13 +13,13 @@ import Panier from "../screens/Panier";
 import RechercheProduits from "../screens/RechercheProduits";
 import HistoriqueC from "../screens/HistoriqueC";
 import CommandeDetailsScreen from "../screens/CommandeDetailsScreen";
+import ModifyProfil from "../screens/ModifyProfil";
+import LoginScreen from "../screens/LoginScreen";
 const Drawer = createDrawerNavigator();
 
 export default function navigation() {
     const { isLoggedIn, logout } = useContext(AuthContext);
     console.log(isLoggedIn);
-
-
 
 
     return (
@@ -54,7 +53,7 @@ export default function navigation() {
                 {!isLoggedIn ? (
                     <Drawer.Screen
                         name="Se connecter"
-                        component={Login}
+                        component={LoginScreen}
                         options={() => ({
                             header: (props) => <Navbar {...props} title="Se connecter"></Navbar>,
                             drawerIcon: (color) => (
@@ -65,23 +64,21 @@ export default function navigation() {
                 ) : (
                     <Drawer.Screen
                         name="Deconnexion"
-                        listeners={({ navigation }) => ({
-                            focus: () => logout(navigation), // Déclenche la déconnexion lorsque l'utilisateur navigue vers ce Drawer.Screen
-                        })}
-                        component={Login} // Il est possible que vous souhaitiez avoir un composant vide ou une redirection automatique ici, car le listener s'occupera de la déconnexion
+                        component={LoginScreen}
                         options={{
                             header: (props) => <Navbar {...props} title="Se connecter"></Navbar>,
                             drawerLabel: 'Déconnexion',
                             drawerIcon: ({ color }) => <Entypo name="log-out" size={22} color={'#582900'} />,
                             // Gérer la déconnexion lors du clic
-                            listeners: {
+                            listeners: ({ navigation }) => ({
                                 press: (e) => {
-                                    e.preventDefault(); // Empêcher la navigation
-                                    logout(); // Déclencher la fonction de déconnexion
+                                    e.preventDefault(); // Empêcher la navigation vers le composant associé à ce Drawer.Screen
+                                    logout(navigation); // Déclencher la fonction de déconnexion en passant l'objet navigation
                                 },
-                            },
+                            }),
                         }}
                     />
+
                 )}
                 {!isLoggedIn &&  (
                     <Drawer.Screen
@@ -140,7 +137,7 @@ export default function navigation() {
                         name="RechercheProduits"
                         component={RechercheProduits}
                         options={() => ({
-                            header: (props) => <Navbar {...props} title="RechercheProduits"></Navbar>,
+                            header: (props) => <Navbar {...props} title="Recherche Produits"></Navbar>,
                             drawerIcon: (color) => (
                                 <Entypo name="user" size={22} color={'#582900'} />
                             ),
@@ -163,11 +160,26 @@ export default function navigation() {
 
                 />
 
+                {/*<Drawer.Screen*/}
+                {/*    name="Détails de la commande"*/}
+                {/*    component={CommandeDetailsScreen}*/}
+                {/*    options={() => ({*/}
+                {/*        header: (props) => <Navbar {...props} title="Détails de la commande"></Navbar>,*/}
+                {/*        drawerIcon: (color) => (*/}
+                {/*            <Entypo name="user" size={22} color={'#582900'} />*/}
+                {/*        ),*/}
+                {/*        drawerItemStyle: { display: 'none' },*/}
+
+                {/*    })}*/}
+
+                {/*/>*/}
+
+
                 <Drawer.Screen
-                    name="Détails de la commande"
-                    component={CommandeDetailsScreen}
+                    name="Modifier Profil"
+                    component={ModifyProfil}
                     options={() => ({
-                        header: (props) => <Navbar {...props} title="Détails de la commande"></Navbar>,
+                        header: (props) => <Navbar {...props} title="Modifier Profil"></Navbar>,
                         drawerIcon: (color) => (
                             <Entypo name="user" size={22} color={'#582900'} />
                         ),
@@ -176,6 +188,21 @@ export default function navigation() {
                     })}
 
                 />
+                {isLoggedIn &&  (
+                    <Drawer.Screen
+                        name="Détails de la commande"
+                        component={CommandeDetailsScreen}
+                        options={() => ({
+                            header: (props) => <Navbar {...props} title="Détails de la commande"></Navbar>,
+                            drawerIcon: (color) => (
+                                <Entypo name="user" size={22} color={'#582900'} />
+                            ),
+                            drawerItemStyle: { display: 'none' },
+
+                        })}
+
+                    />
+                )}
 
 
             </Drawer.Navigator>

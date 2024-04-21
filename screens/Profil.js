@@ -17,6 +17,7 @@ import { useHistoryNavigation } from '../middleware/NavigationHistoryContext'; /
 
 
 
+
 const PhotosRoutes = () => (
     <View style={{ flex: 1 }}>
         <FlatList
@@ -71,27 +72,7 @@ const Profil = (route) => {
         }, [])
     );
 
-    const [routes] = useState([
-        // { key: "1", title: "Dernières commandes" },
-    ]);
 
-    // const renderTabBar = (props) => (
-        // <TabBar
-        //     {...props}
-        //     indicatorStyle={{
-        //         backgroundColor: '#ffffff',
-        //     }}
-        //     style={{
-        //         backgroundColor: '#781e1e',
-        //         height: 45,
-        //
-        //     }}
-        //     renderLabel={({ focused, route }) => (
-        //         <Text style={{ color:"#ffffff"}}>
-        //             {route.title}
-        //         </Text>
-        //     )}
-        // />
 
     return (
         <SafeAreaView
@@ -247,6 +228,8 @@ const Profil = (route) => {
 
                 <View style={{ flexDirection: "row" }}>
                     <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate('Modifier Profil')                }}
                         style={{
                             width: 124,
                             height: 42,
@@ -292,14 +275,6 @@ const Profil = (route) => {
                 </View>
             </View>
 
-            {/*<View style={{ flex: 1, marginHorizontal: 50, marginTop:30 }}>*/}
-            {/*    <TabView*/}
-            {/*        navigationState={{ index, routes }}*/}
-            {/*        renderScene={renderScene}*/}
-            {/*        onIndexChange={setIndex}*/}
-            {/*        // renderTabBar={renderTabBar}*/}
-            {/*    />*/}
-            {/*</View>*/}
         </SafeAreaView>
     );
 };

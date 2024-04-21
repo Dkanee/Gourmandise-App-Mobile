@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, FlatList, Dimensions, Image, StyleSheet } from 'react-native';
+import {View, FlatList, Dimensions, Image, StyleSheet, ScrollView, SafeAreaView} from 'react-native';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -37,6 +37,8 @@ const MyCarousel = () => {
     );
 
     return (
+        <SafeAreaView>
+        <ScrollView contentContainerStyle={styles.container}>
         <FlatList
             ref={ref}
             data={images}
@@ -49,6 +51,8 @@ const MyCarousel = () => {
             snapToInterval={screenWidth - 60 + 20}
             contentContainerStyle={styles.carouselContainer}
         />
+        </ScrollView>
+        </SafeAreaView>
     );
 
 
@@ -64,11 +68,17 @@ const styles = StyleSheet.create({
         height: 200,
         borderRadius: 8,
         overflow: 'hidden',
-        marginHorizontal: 10, // Half of snapToInterval's margin
+        marginHorizontal: 10,
     },
     image: {
         width: '100%',
         height: '100%',
+    },
+
+    container: {
+        flex: 1,
+        paddingHorizontal: 20,
+        alignItems: 'center',
     },
 });
 

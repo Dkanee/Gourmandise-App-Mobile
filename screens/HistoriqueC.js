@@ -15,7 +15,7 @@ const HistoriqueC = (route) => {
 
     useFocusEffect(
         React.useCallback(() => {
-            addRouteToHistory('Détails de la commande'); // Replace 'MyScreen' with the actual name of your screen
+            addRouteToHistory('Profil'); // Replace 'MyScreen' with the actual name of your screen
         }, [])
     );
 

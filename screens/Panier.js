@@ -19,6 +19,7 @@ import {stylesProduits} from "../styles/ProduitStyles";
 import {styles} from "../styles/PanierStyles";
 import Produits from "./Produits";
 import {useHistoryNavigation} from "../middleware/NavigationHistoryContext";
+import Toast from "react-native-toast-message";
 
 
 const Panier = () => {
@@ -36,6 +37,8 @@ const Panier = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [reloadTrigger, setReloadTrigger] = useState(0);
     const { addRouteToHistory } = useHistoryNavigation();
+    const [loginError, setLoginError] = useState("");
+
 
     useFocusEffect(
         React.useCallback(() => {
@@ -44,9 +47,37 @@ const Panier = () => {
     );
 
 
-    const openPaymentSimulationModal = () => {
-        setPaymentSimulationModalVisible(true);
+
+    const openPaymentSimulationModal = async () => {
+        if (articlesPanier.length === 0) {
+            // Si le panier est vide, définissez un message d'erreur et ne continuez pas
+            setErrorMessage("Votre panier est vide. Veuillez ajouter des produits avant de simuler un paiement.");
+            setTimeout(() => {
+                setErrorMessage("");
+            }, 5000); // le message apparaît pendant 5s
+            return; // Arrêtez l'exécution de la fonction ici
+        }
+
+
+        const userToken = await AsyncStorage.getItem('userToken');
+        console.log(userToken); // Ajoutez ceci pour déboguer
+        if (!userToken) {
+            setLoginError("Veuillez vous connecter pour simuler un paiement s'il vous plaît.");
+            setTimeout(() => {
+                setLoginError("");
+            }, 5000); // le message apparaît pendant 5s
+            Toast.show({
+                type: 'error',
+                text1: 'Vous devez être connecté pour commander.',
+            });
+        } else {
+            setPaymentSimulationModalVisible(true);
+            setLoginError('');
+
+        }
     };
+
+
 
     const ajusterQuantite = async (id, delta) => {
         const updatedArticlesPanier = articlesPanier.map(article => {
@@ -126,6 +157,18 @@ const Panier = () => {
             fetchCart();
         }, [])
     );
+
+    useEffect(() => {
+        const checkLoginStatus = async () => {
+            const userToken = await AsyncStorage.getItem('userToken');
+            if (userToken) {
+                // L'utilisateur est connecté, réinitialiser loginError
+                setLoginError('');
+            }
+        };
+
+        checkLoginStatus();
+    }, []); // Les crochets vides signifient que cet effet s'exécutera une seule fois après le premier rendu du composant
 
     useEffect(() => {
         const fetchVendeurs = async () => {
@@ -290,8 +333,13 @@ const Panier = () => {
             )}
             <View style={styles.totalContainer}>
                 {errorMessage && <Text style={stylesProduits.errorMessage}>{errorMessage}</Text>}
+                {loginError ? <Text style={{ color: 'red' }}>{loginError}</Text> : null}
+
                 <Text style={styles.totalText}>Total: €{totalPanier}</Text>
-                <TouchableOpacity style={styles.checkoutButton} onPress={openPaymentSimulationModal}>
+
+                <TouchableOpacity style={styles.checkoutButton} onPress={openPaymentSimulationModal}
+                >
+
                     <Text style={styles.checkoutButtonText} >Simuler paiement</Text>
 
                 </TouchableOpacity>

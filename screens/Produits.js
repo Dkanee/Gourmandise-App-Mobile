@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {
     View,
     Text,
@@ -11,7 +11,7 @@ import {
     Pressable,
     ScrollView,
     TextInput,
-    Dimensions
+    Dimensions, RefreshControl
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -31,14 +31,7 @@ export default function Produits({ navigation,route }) {
     const [isLoading, setIsLoading] = useState(true);
     const [orderConfirmationModalVisible, setOrderConfirmationModalVisible] = useState(false);
     const { addRouteToHistory } = useHistoryNavigation();
-
-    useFocusEffect(
-        React.useCallback(() => {
-            addRouteToHistory('Produits'); // Replace 'MyScreen' with the actual name of your screen
-        }, [])
-    );
-
-
+    const [refreshing, setRefreshing] = useState(false);
 
 
     useEffect(() => {
@@ -67,14 +60,16 @@ export default function Produits({ navigation,route }) {
     }, [route.params?.searchQuery, currentPage]);
 
 
-    const fetchData = async () => {
-        const cachedData = await AsyncStorage.getItem(`data_page_${currentPage}`);
-        if (cachedData) {
+    const fetchData = async (forceUpdate = false) => {
+        setIsLoading(true);
+
+        const cacheKey = `data_page_${currentPage}`;
+        const cachedData = await AsyncStorage.getItem(cacheKey);
+
+        if (cachedData && !forceUpdate) {
             setData(JSON.parse(cachedData));
         } else {
             try {
-                setIsLoading(true); // Commence le chargement
-
                 const response = await fetch(
                     `https://gourmandise.mgueye-ba.v70208.campus-centre.fr/api/products/paginated?page=${currentPage}&limit=${itemsPerPage}`,
                     {
@@ -86,17 +81,40 @@ export default function Produits({ navigation,route }) {
                     }
                 );
                 const jsonData = await response.json();
+
                 const productsWithQuantity = jsonData.map((item) => ({
                     ...item,
                     quantity: 1,
                 }));
-                await AsyncStorage.setItem(`data_page_${currentPage}`, JSON.stringify(productsWithQuantity));
+                await AsyncStorage.setItem(cacheKey, JSON.stringify(productsWithQuantity));
                 setData(productsWithQuantity);
             } catch (err) {
                 console.error(err);
+            } finally {
+                setIsLoading(false);
             }
         }
     };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchData();
+            addRouteToHistory('Produits'); // Replace 'MyScreen' with the actual name of your screen
+        }, [])
+    );
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchData();
+        }, [])
+    );
+
+
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        fetchData(true).then(() => setRefreshing(false)); // Assurez-vous que fetchData est ajusté pour retourner une promesse
+    }, [currentPage]);
 
     useEffect(() => {
         fetchData();
@@ -167,6 +185,8 @@ export default function Produits({ navigation,route }) {
                 description: product.description,
                 image: product.url_image,
                 prixHT:product.prix_unitaire_HT,
+                stock:product.stock,
+
             });
             console.log(cart)
         }
@@ -187,21 +207,34 @@ export default function Produits({ navigation,route }) {
     }, [route.params?.selectedProduct]);
 
 
+    const renderItem = ({ item }) => {
+        const isOutOfStock = item.stock < 1; // Vérifie si l'article est en rupture de stock
 
+        return (
+            <TouchableOpacity
+                onPress={() => openModal(item)}
+                style={[styles.card, isOutOfStock && styles.cardOutOfStock]}
+                disabled={isOutOfStock} // Désactiver le TouchableOpacity si en rupture de stock
+            >
+                <Image source={{ uri: item.url_image }} style={styles.productImage} />
+                <View style={styles.cardContent}>
+                    <Text style={styles.productName}>{item.designation}</Text>
 
+                    <Text style={styles.productPrice}>
+                        {((item.prix_unitaire_HT * 0.2 + item.prix_unitaire_HT)).toFixed(2)}€
+                    </Text>
+                    {/* Affichage conditionnel du texte basé sur le stock */}
+                    {isOutOfStock ? (
+                        <Text style={styles.stockTextHors}>Hors Stock</Text>
+                    ) : (
+                        <Text style={styles.stockText}>En Stock : {item.stock}</Text>
 
-    const renderItem = ({ item }) => (
-        <TouchableOpacity onPress={() => openModal(item)} style={styles.card}>
-            <Image source={{ uri: item.url_image }} style={styles.productImage} />
-            <View style={styles.cardContent}>
-                <Text style={styles.productName}>{item.designation}</Text>
-                <Text style={styles.productPrice}>
-                    {/*{((item.prix_unitaire_HT * 0.2 + item.prix_unitaire_HT) * item.quantity).toFixed(2)}€*/}
-                    {((item.prix_unitaire_HT * 0.2 + item.prix_unitaire_HT)).toFixed(2)}€
-                </Text>
-            </View>
-        </TouchableOpacity>
-    );
+                    )}
+                </View>
+            </TouchableOpacity>
+        );
+    };
+
     useEffect(() => {
         if (route.params?.selectedProduct) {
             let productDetails = route.params.selectedProduct;
@@ -229,6 +262,9 @@ export default function Produits({ navigation,route }) {
                     data={data}
                     renderItem={renderItem}
                     keyExtractor={(item) => item.reference.toString()}
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
                 />
 
                 <View style={styles.paginationContainer}>
@@ -517,5 +553,15 @@ const styles = StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: 'center',
+    },
+    cardOutOfStock: {
+        backgroundColor: '#C0C0C0', // Changer la couleur de fond pour indiquer qu'elle est désactivée
+        opacity: 0.5, // Rendre la carte plus pâle
+    },
+    stockTextHors: {
+        color: "red",
+    },
+    stockText: {
+        color: "green",
     },
 });

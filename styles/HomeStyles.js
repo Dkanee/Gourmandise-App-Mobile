@@ -1,5 +1,4 @@
 import {StyleSheet} from "react-native";
-import {COLORS, SIZES} from "../assets/constants/constants";
 
 export const styles = StyleSheet.create({
 
@@ -14,6 +13,7 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 10,
         width: 360,
         backgroundColor: '#8A6642',
+        marginLeft:14,
     },
     searchIcon: {
         color: '#FFFFFF',
@@ -21,13 +21,18 @@ export const styles = StyleSheet.create({
     searchInput: {
         flex: 1,
         fontFamily: 'regular',
-        paddingRight: 10, // Ajustez selon l'espace nécessaire pour l'icône
         color: '#FFFFFF',
+        marginLeft:10,
     },
     container: {
         flex: 1,
         paddingHorizontal: 20,
         alignItems: 'center',
+    },
+
+    safeAreaContainer: {
+        flex: 1,
+        backgroundColor:'white',
     },
     title: {
         fontSize: 23,
@@ -36,6 +41,7 @@ export const styles = StyleSheet.create({
         marginTop: 20,
         marginRight: 180,
         marginBottom: 20,
+        paddingLeft: 15,
     },
 
     centeredRectangleTitle: {

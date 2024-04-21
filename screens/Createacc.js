@@ -17,6 +17,7 @@ import {Label} from "flowbite-react";
 
 
 export default function Createacc({ navigation }) {
+    const [networkError, setNetworkError] = useState("");
     const TOTAL_STEPS = 2;
     const [currentStep, setCurrentStep] = useState(1);
     const [focusedField, setFocusedField] = useState(null);
@@ -34,57 +35,12 @@ export default function Createacc({ navigation }) {
     const cpRegex = /^\d{5}$/;
 
 
-    // const validateNom = (nom) => {
-    //     const isValid = nom.trim() !== "" && nameRegex.test(nom);
-    //     setFieldValidity(prev => ({...prev, nom: isValid}));
-    //     return isValid;
-    // };
-
-
     const [fieldValidity, setFieldValidity] = useState({
         nom: false,
         adresse: false,
         cp: false,
         ville: false,
     });
-
-    // const calculateProgress = () => {
-    //     let progressPerStep = 100 / TOTAL_STEPS; // La progression totale divisée par le nombre d'étapes
-    //     let progressWithinStep = 0;
-    //
-    //     if(currentStep === 1) {
-    //         let filledFields = 0;
-    //         if(nom.trim() !== "" && nameRegex.test(nom)) filledFields++;
-    //         if(adresse.trim() !== "") filledFields++;
-    //         if(cp.trim() !== "" && cpRegex.test(cp)) filledFields++;
-    //         if(ville.trim() !== "") filledFields++;
-    //
-    //         // Calculez la progression dans l'étape actuelle
-    //         let fieldsPerStep = 4; // Nombre de champs dans l'étape 1
-    //         progressWithinStep = (filledFields / fieldsPerStep) * progressPerStep;
-    //     }
-    //
-    //     if(currentStep === 2) {
-    //         let filledFields = 0;
-    //         if(telephone.trim() !== "") filledFields++;
-    //         // if(email.trim() !== "" && emailRegex.test(nom)) filledFields++;
-    //         if(email.trim() !== "" ) filledFields++;
-    //         if(emailRegex.test(email)) filledFields++;
-    //         if(motdepasse.trim() !== "") filledFields++;
-    //
-    //         if(telephone.trim() !== "" && (email.trim() !== "" ) && (emailRegex.test(email)) && (motdepasse.trim() !== ""){
-    //
-    //         }
-    //
-    //
-    //         // Calculez la progression dans l'étape actuelle
-    //         let fieldsPerStep = 4; // Nombre de champs dans l'étape 1
-    //         progressWithinStep = (filledFields / fieldsPerStep) * progressPerStep;
-    //     }
-    //
-    //     // Calculez la progression totale
-    //     return ((currentStep - 1) * progressPerStep) + progressWithinStep;
-    // };
 
     const calculateProgress = () => {
         let progressPerStep = 100 / TOTAL_STEPS; // La progression totale divisée par le nombre d'étapes
@@ -217,6 +173,7 @@ export default function Createacc({ navigation }) {
     // }, []);
 
     const createAccount = async () => {
+
         let validationPassed = false;
 
         if (currentStep === 1) {
@@ -230,6 +187,8 @@ export default function Createacc({ navigation }) {
             if (!validationPassed) {
                 return false; // Empêche de continuer si la validation échoue
             }
+
+            setNetworkError(""); // Réinitialisez l'erreur de réseau
 
             // Si nous sommes ici, cela signifie que la validation a réussi pour l'étape 2
             try {
@@ -264,6 +223,7 @@ export default function Createacc({ navigation }) {
                 }
             } catch (error) {
                 Alert.alert("Erreur", "Une erreur est survenue lors de la création du compte.");
+                setNetworkError("Impossible de se connecter au serveur. Vérifiez votre connexion Internet et réessayez.");
             }
         }
     };
@@ -280,7 +240,7 @@ export default function Createacc({ navigation }) {
             </View>
 
             <Image source={{ uri: "https://i.ibb.co/Q9Pjm80/logo.png" }} style={[styles.logo]} />
-
+            {networkError ? <Text style={{ color: 'red' }}>{networkError}</Text> : null}
 
             {currentStep===1 && (
                 <>

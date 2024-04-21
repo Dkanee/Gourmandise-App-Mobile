@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import {View, Image, StyleSheet, Dimensions, Text, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {
+    View,
+    Image,
+    StyleSheet,
+    Dimensions,
+    Text,
+    TouchableOpacity,
+    ActivityIndicator,
+    ScrollView,
+    SafeAreaView
+} from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -8,18 +18,6 @@ const Nouveautes = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(true);
 
 
-    // useEffect(() => {
-    //     const fetchNouveautes = async () => {
-    //         try {
-    //             const response = await fetch('https://gourmandise.mgueye-ba.v70208.campus-centre.fr/api/lastproducts2');
-    //             const jsonData = await response.json();
-    //             setNouveautes(jsonData.map(item => ({...item, key: item.url_image}))); // Assurez-vous que chaque item ait un attribut unique `key`
-    //         } catch (error) {
-    //             console.error('Erreur lors de la récupération des nouveautés:', error);
-    //         }
-    //     };
-    //     fetchNouveautes();
-    // }, []);
     useEffect(() => {
         const fetchNouveautes = async () => {
             try {
@@ -37,6 +35,7 @@ const Nouveautes = ({ navigation }) => {
     }, []);
 
     return (
+        <ScrollView>
         <View style={styles.container}>
             {isLoading ? (
                 <ActivityIndicator size="large" color="#0000ff"/>
@@ -62,6 +61,7 @@ const Nouveautes = ({ navigation }) => {
                 </>
             )}
         </View>
+       </ScrollView>
     );
 };
 
@@ -78,6 +78,8 @@ const styles = StyleSheet.create({
         // marginTop: 15,
         marginRight: 140,
         // marginBottom: 20,
+        paddingLeft:15,
+        paddingRight:12,
     },
     nouveautesContainer: {
         flexDirection: 'row',

@@ -68,21 +68,23 @@ export default function RechercheProduits({ navigation,route }) {
                                 <Image source={{ uri: item.url_image }} style={styles.productImage} />
                                 <View style={styles.textContainer}>
                                     <Text style={styles.productName}>{item.designation}</Text>
+
                                     <Text style={styles.productPrice}>{((item.prix_unitaire_HT * 0.2 + item.prix_unitaire_HT)).toFixed(2)}€</Text>
                                     <TouchableOpacity
-                                        style={[styles.button, styles.buttonClose]}
-                                        onPress={() => navigation.navigate('Produits', {selectedProduct: item}) }>
+                                        style={[styles.button, styles.buttonClose, item.stock <= 0 && styles.buttonDisabled]}
+                                        onPress={() => navigation.navigate('Produits', {selectedProduct: item})}
+                                        disabled={item.stock <= 0} // Désactive le bouton si le stock est inférieur ou égal à 0
+                                    >
                                         <Text style={styles.textStyle}>Acheter</Text>
                                     </TouchableOpacity>
-                                    <Text style={styles.stockText}>En Stock</Text>
+                                    {/* Ici, on vérifie le stock et on affiche le message correspondant */}
+                                    {item.stock > 0 ? (
+                                        <Text style={styles.stockText}>En Stock</Text>
+                                    ) : (
 
-
-
-
-
-
+                                        <Text style={styles.stockTextHors}>Hors Stock</Text>
+                                    )}
                                 </View>
-
                             </TouchableOpacity>
                         )}
                     />
@@ -122,6 +124,12 @@ export default function RechercheProduits({ navigation,route }) {
 
 const screenWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
+
+
+
+    stockTextHors: {
+        color: "red"
+    },
 
     stockText:{
         color:"green"
