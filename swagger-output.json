@@ -5,10 +5,10 @@
     "title": "REST API",
     "description": ""
   },
-  "host": "localhost:3000",
-  "basePath": "/",
+  "host": "gourmandise.mgueye-ba.v70208.campus-centre.fr",
+  "basePath": "/api/",
   "schemes": [
-    "http"
+    "https"
   ],
   "tags": [
     {
@@ -29,11 +29,73 @@
     }
   ],
   "paths": {
-    "/products": {
+    "products": {
       "get": {
         "description": "Avoir la liste entière des produits.",
         "tags": [
           "Produit"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/search/products": {
+      "get": {
+        "description": "Recherche de produits par nom ou description.",
+        "tags": [
+          "Produit"
+        ],
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/products/paginated": {
+      "get": {
+        "description": "Obtenir une liste paginée des produits.",
+        "tags": [
+          "Produit"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "integer",
+            "default": 1
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "integer",
+            "default": 10
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "type": "string"
+          }
         ],
         "responses": {
           "200": {
@@ -69,6 +131,38 @@
         }
       }
     },
+    "/products/count": {
+      "get": {
+        "description": "Récupérer le nombre total de produits.",
+        "tags": [
+          "Produit"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/vendeurs": {
+      "get": {
+        "description": "Récupérer la liste des vendeurs.",
+        "tags": [
+          "Produit"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/client": {
       "post": {
         "description": "Récupérer sa fiche client à l'aide de son code client à condition d'être connecté.",
@@ -88,7 +182,7 @@
               "type": "object",
               "properties": {
                 "codec": {
-                  "example": "any"
+                  "type": "string"
                 }
               }
             }
@@ -126,7 +220,7 @@
               "type": "object",
               "properties": {
                 "codec": {
-                  "example": "any"
+                  "type": "string"
                 }
               }
             }
@@ -159,25 +253,25 @@
               "type": "object",
               "properties": {
                 "nom": {
-                  "example": "any"
+                  "type": "string"
                 },
                 "adresse": {
-                  "example": "any"
+                  "type": "string"
                 },
                 "cp": {
-                  "example": "any"
+                  "type": "string"
                 },
                 "ville": {
-                  "example": "any"
+                  "type": "string"
                 },
                 "telephone": {
-                  "example": "any"
+                  "type": "string"
                 },
                 "email": {
-                  "example": "any"
+                  "type": "string"
                 },
                 "motdepasse": {
-                  "example": "any"
+                  "type": "string"
                 }
               }
             }
@@ -211,35 +305,49 @@
             "schema": {
               "type": "object",
               "properties": {
-                "codev": {
-                  "example": "any"
+                "email": {
+                  "type": "string"
                 },
-                "codec": {
-                  "example": "any"
+                "codev": {
+                  "type": "string"
                 },
                 "date_livraison": {
-                  "example": "any"
+                  "type": "string"
                 },
                 "date_commande": {
-                  "example": "any"
+                  "type": "string"
                 },
-                "commande_total_ht": {
-                  "example": "any"
+                "total_ht": {
+                  "type": "number"
                 },
                 "total_tva": {
-                  "example": "any"
+                  "type": "number"
                 },
                 "etat": {
-                  "example": "any"
+                  "type": "string"
                 },
                 "com_payee": {
-                  "example": "any"
+                  "type": "boolean"
                 },
                 "com_prete": {
-                  "example": "any"
+                  "type": "boolean"
                 },
                 "lignecommande": {
-                  "example": "any"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "reference": {
+                        "type": "string"
+                      },
+                      "quantite_demandee": {
+                        "type": "integer"
+                      },
+                      "total_ht": {
+                        "type": "number"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -252,8 +360,14 @@
           "201": {
             "description": "Created"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -272,10 +386,10 @@
               "type": "object",
               "properties": {
                 "email": {
-                  "example": "any"
+                  "type": "string"
                 },
                 "motdepasse": {
-                  "example": "any"
+                  "type": "string"
                 }
               }
             }
@@ -296,7 +410,7 @@
     },
     "/updateclient": {
       "post": {
-        "description": "Permet à un utilisateur connecté de modifier ses informations.",
+        "description": "Permet à l'utilisateur de mettre à jour ses informations personnelles à condition d'être connecté.",
         "tags": [
           "Client"
         ],
@@ -313,25 +427,25 @@
               "type": "object",
               "properties": {
                 "nom": {
-                  "example": "any"
+                  "type": "string"
                 },
                 "adresse": {
-                  "example": "any"
+                  "type": "string"
                 },
                 "cp": {
-                  "example": "any"
+                  "type": "string"
                 },
                 "ville": {
-                  "example": "any"
+                  "type": "string"
                 },
                 "telephone": {
-                  "example": "any"
+                  "type": "string"
                 },
                 "email": {
-                  "example": "any"
+                  "type": "string"
                 },
                 "codec": {
-                  "example": "any"
+                  "type": "string"
                 }
               }
             }
@@ -343,13 +457,16 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/updatepassword": {
       "post": {
-        "description": "Permet à un utilisateur connecté de modifier son mot de passe.",
+        "description": "Permet à l'utilisateur de mettre à jour son mot de passe à condition d'être connecté.",
         "tags": [
           "Client"
         ],
@@ -366,10 +483,10 @@
               "type": "object",
               "properties": {
                 "motdepasse": {
-                  "example": "any"
+                  "type": "string"
                 },
                 "codec": {
-                  "example": "any"
+                  "type": "string"
                 }
               }
             }
@@ -381,13 +498,16 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/deleteclient": {
       "post": {
-        "description": "Permet à un utilisateur connecté de supprimer son compte.",
+        "description": "Permet à l'utilisateur de supprimer son compte à condition d'être connecté.",
         "tags": [
           "Client"
         ],
@@ -404,7 +524,7 @@
               "type": "object",
               "properties": {
                 "codec": {
-                  "example": "any"
+                  "type": "string"
                 }
               }
             }
@@ -416,39 +536,64 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/lastpromo": {
       "get": {
-        "description": "Permet de récupérer les dernières promotions.",
+        "description": "Récupérer les trois derniers produits en promotion.",
         "tags": [
           "Produit"
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/lastproducts": {
       "get": {
-        "description": "Permet de récupérer les nouveaux produits.",
+        "description": "Récupérer les dix derniers produits ajoutés.",
         "tags": [
           "Produit"
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/lastproducts2": {
+      "get": {
+        "description": "Récupérer les quatre derniers produits ajoutés.",
+        "tags": [
+          "Produit"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/checkpromo": {
       "post": {
-        "description": "Permet de vérifier si un code de promotion fourni existe bel et bien. Si oui, on le renvoie.",
+        "description": "Vérifier la validité d'un code promo.",
         "tags": [
           "Produit"
         ],
@@ -460,7 +605,7 @@
               "type": "object",
               "properties": {
                 "codepromo": {
-                  "example": "any"
+                  "type": "string"
                 }
               }
             }
@@ -472,13 +617,16 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/commandpaymenton": {
       "post": {
-        "description": "Permet de passer le statut d'une commande à 'payée'.",
+        "description": "Marquer une commande comme payée.",
         "tags": [
           "Commande"
         ],
@@ -495,7 +643,7 @@
               "type": "object",
               "properties": {
                 "numero": {
-                  "example": "any"
+                  "type": "string"
                 }
               }
             }
@@ -507,13 +655,16 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/commandready": {
       "post": {
-        "description": "Permet de mettre une commande à prête à être récupérée.",
+        "description": "Marquer une commande comme prête.",
         "tags": [
           "Commande"
         ],
@@ -530,7 +681,7 @@
               "type": "object",
               "properties": {
                 "numero": {
-                  "example": "any"
+                  "type": "string"
                 }
               }
             }
@@ -542,19 +693,13 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     }
   },
-  "swaggerDefinition": {
-    "info": {
-      "title": "API GourmandiseSARL",
-      "description": "API pour l'entreprise GourmandiseSARL, application client.",
-      "version": "1.0.0"
-    }
-  },
-  "apis": [
-    "endpoints.js"
-  ]
+  "definitions": {}
 }

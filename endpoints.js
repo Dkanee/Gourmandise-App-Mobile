@@ -14,7 +14,28 @@ module.exports = function (app, pool, bcrypt, jwt) {
         }
     })
 	
-	
+	app.get("/search/products", async (req, res) => {
+    const searchQuery = req.query.query;
+    if (!searchQuery) {
+        return res.status(400).json({ message: "Aucune requête de recherche fournie." });
+    }
+
+    try {
+        const sqlQuery = `
+            SELECT * FROM produit
+            WHERE designation LIKE ? OR description LIKE ?
+        `;
+        const sqlParams = [`%${searchQuery}%`, `%${searchQuery}%`];
+        const [rows] = await pool.execute(sqlQuery, sqlParams);
+
+        res.status(200).json(rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Erreur lors de la récupération des produits." });
+    }
+});
+
+
 
 	
 
@@ -24,13 +45,25 @@ module.exports = function (app, pool, bcrypt, jwt) {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const offset = (page - 1) * limit;
+        const searchQuery = req.query.query ? req.query.query : "";
 
-        const [rows] = await pool.execute("SELECT * FROM produit LIMIT ? OFFSET ?", [limit, offset]);
+        let sqlQuery = "SELECT * FROM produit";
+        let sqlParams = [limit, offset];
+
+        if (searchQuery) {
+            sqlQuery += " WHERE nom LIKE ? OR description LIKE ?";
+            sqlParams.unshift('%' + searchQuery + '%', '%' + searchQuery + '%');
+        }
+
+        sqlQuery += " LIMIT ? OFFSET ?";
+
+        const [rows] = await pool.execute(sqlQuery, sqlParams);
         res.status(200).json(rows);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
+
 
 
     app.get("/product/:ref", async (req, res) => {
@@ -54,16 +87,59 @@ module.exports = function (app, pool, bcrypt, jwt) {
         }
     })
 
-    app.post("/dernierescommandes", auth, async (req, res) => {
-        const {codec} = req.body;
-        const values = [codec];
-        try {
-            const [rows] = await pool.execute("SELECT COUNT(numero_ligne) as nbproduits, total_tva, commande.numero, com_payee, com_prete FROM client, commande, ligne_commande WHERE client.codec = commande.codec AND commande.numero = ligne_commande.numero AND client.codec = ? GROUP BY total_tva, commande.numero", values);
-            res.status(200).json(rows);
-        } catch (err) {
-            res.status(500).json({message: err.message})
-        }
-    })
+ app.post("/dernierescommandes", auth, async (req, res) => {
+    const { codec } = req.body;
+    try {
+        const query = `
+            SELECT 
+                c.numero, 
+                c.date_commande, 
+                c.total_ht, 
+                c.total_tva, 
+                c.etat,
+                GROUP_CONCAT(
+                    CONCAT(p.designation, '^^^', lc.quantite_demandee, '^^^', p.prix_unitaire_HT, '^^^', p.url_image) 
+                    SEPARATOR ';;;'
+                ) AS details
+            FROM commande c
+            JOIN ligne_commande lc ON c.numero = lc.numero
+            JOIN produit p ON lc.reference = p.reference
+            WHERE c.codec = ?
+            GROUP BY c.numero
+            ORDER BY c.date_commande DESC
+            LIMIT 1000;
+        `;
+
+        const [rows] = await pool.execute(query, [codec]);
+        
+        const commandes = rows.map(row => {
+            const produits = row.details.split(';;;').map(detail => {
+                const [designation, quantite, prixHT, urlImage] = detail.split('^^^');
+                return { 
+                    designation, 
+                    quantite: parseInt(quantite, 10), 
+                    prixHT: parseFloat(prixHT), 
+                    urlImage 
+                };
+            });
+
+            return {
+                numero: row.numero,
+                dateCommande: row.date_commande,
+                totalHT: row.total_ht,
+                totalTVA: row.total_tva,
+                etat: row.etat,
+                produits: produits
+            };
+        });
+
+        res.status(200).json(commandes);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Erreur lors de la récupération des dernières commandes" });
+    }
+});
+
 
     //Register
     app.post("/register", async (req, res) => {
@@ -95,15 +171,26 @@ module.exports = function (app, pool, bcrypt, jwt) {
         res.status(500).json({ message: err.message });
     }
 });
+	
+	app.get('/vendeurs', async (req, res) => {
+    try {
+        const [vendeurs] = await pool.execute("SELECT codev, nom FROM vendeur");
+        res.json(vendeurs);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Erreur lors de la récupération des vendeurs');
+    }
+});
+
 
 
    app.post("/passcommand", auth, async (req, res) => {
     const {
-        email, // L'email pour récupérer le codec
-        codev, // Ajout de codev dans la requête
+        email,
+        codev,
         date_livraison,
         date_commande,
-        commande_total_ht,
+        total_ht,
         total_tva,
         etat,
         com_payee,
@@ -112,35 +199,42 @@ module.exports = function (app, pool, bcrypt, jwt) {
     } = req.body;
 
     try {
-        // vérifier si le codev correspond à un vendeur existantt
-        const [vendeur] = await pool.execute("SELECT * FROM vendeur WHERE codev = ?", [codev]);
-        if (vendeur.length === 0) {
-            return res.status(404).json({ message: "Vendeur non trouvé." });
-        }
-
-        // récupérer le codec à partir de l'e mail
+        // Récupérer le codec à partir de l'email
         const [user] = await pool.execute("SELECT codec FROM client WHERE email = ?", [email]);
         if (user.length === 0) {
             return res.status(404).json({ message: "Utilisateur non trouvé." });
         }
-
         const codec = user[0].codec;
-        const valuescommande = [codev, codec, date_livraison, date_commande, commande_total_ht, total_tva, etat, com_payee, com_prete];
-        
+
         // Insérer la commande
-        const [commande] = await pool.execute("INSERT INTO commande (codev, codec, date_livraison, date_commande, total_ht, total_tva, etat, com_payee, com_prete) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", valuescommande);
+        const [commande] = await pool.execute(
+            "INSERT INTO commande (codev, codec, date_livraison, date_commande, total_ht, total_tva, etat, com_payee, com_prete) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+            [codev, codec, date_livraison, date_commande, total_ht, total_tva, etat, com_payee, com_prete]
+        );
+        const numeroCommande = commande.insertId;
 
-        let numeroLigneDur = 1;
-        for (const element of lignecommande) {
-            const dernierecommande = commande.insertId;
-            const {reference, quantite, lignecommande_total_ht} = element;
-            const valuesligne_commande = [dernierecommande, numeroLigneDur, reference, quantite, lignecommande_total_ht];
+        // Parcourir chaque ligne de commande
+        for (const ligne of lignecommande) {
+            const { reference, quantite_demandee, total_ht } = ligne;
 
-            await pool.execute("INSERT INTO ligne_commande (numero, numero_ligne, reference, quantite_demandee, total_ht) VALUES (?, ?, ?, ?, ?)", valuesligne_commande);
-            numeroLigneDur++;
+            // Vérifier le stock actuel
+            const [produit] = await pool.execute("SELECT stock FROM produit WHERE reference = ?", [reference]);
+            if (produit[0].stock < quantite_demandee) {
+                // Si le stock est insuffisant, annuler la commande (vous pourriez également choisir de ne pas insérer cette ligne spécifique)
+                return res.status(400).json({ message: `Stock insuffisant pour le produit ${reference}.` });
+            }
+
+            // Mettre à jour le stock du produit
+            await pool.execute("UPDATE produit SET stock = stock - ? WHERE reference = ?", [quantite_demandee, reference]);
+
+            // Insérer la ligne de commande
+            await pool.execute(
+                "INSERT INTO ligne_commande (numero, numero_ligne, reference, quantite_demandee, total_ht) VALUES (?, ?, ?, ?, ?)", 
+                [numeroCommande, ligne.numero_ligne, reference, quantite_demandee, total_ht]
+            );
         }
 
-        res.sendStatus(201);
+        res.status(201).json({ message: "Commande passée avec succès" });
     } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -149,6 +243,7 @@ module.exports = function (app, pool, bcrypt, jwt) {
         });
     }
 });
+
 
 
   app.post("/login", async (req, res) => {
@@ -169,6 +264,7 @@ module.exports = function (app, pool, bcrypt, jwt) {
                         nom: utilisateur[0].nom,
                         email: utilisateur[0].email,
                         telephone: utilisateur[0].telephone,
+						codec: utilisateur[0].codec,
                         // Autres infos si nécessaire
                     },
                 });
@@ -249,21 +345,23 @@ module.exports = function (app, pool, bcrypt, jwt) {
             });
         }
     });
-	 
-    app.get("/lastproducts", async (req, res) => {
-        try {
-            await pool.execute(
-                "SELECT * FROM produit ORDER BY date_ajout DESC LIMIT 10"
-            )
-            res.sendStatus(200);
-        } catch (err) {
-            console.log(err);
-            res.json({
-                success: false,
-                message: "Une erreur est survenue",
-            });
-        }
-    });
+
+	
+	app.get("/lastproducts", async (req, res) => {
+    try {
+        const [rows] = await pool.execute(
+            "SELECT * FROM produit ORDER BY date_ajout DESC LIMIT 10"
+        );
+        res.status(200).json(rows);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            message: "Une erreur est survenue",
+        });
+    }
+});
+
 	
 	app.get("/lastproducts2", async (req, res) => {
 		try {
